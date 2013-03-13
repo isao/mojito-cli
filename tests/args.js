@@ -11,7 +11,7 @@ test('version', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.ok(msg.match(/^mojito-cli v(\d+\.){2}.+$/));
+        t.ok(msg.match(/^mojito-cli v(\d+\.){2}.+/));
     }
 
     opts = optimist.parse(['version']);
@@ -21,10 +21,11 @@ test('version', function(t) {
     t.equals(main(opts, cb), 'version');
 });
 
-test('fixme? --version not treated as a bool flag', function(t) {
+test('fixme --version not treated as a bool flag', function(t) {
     var opts = optimist.parse(['--version', 'help']);
     // unexpected result since --version is not declared bool
     // { _: [], version: 'help' }
+    // address after hooking up runner, cmd, user and app configs
     t.equals(main(opts, noop), 'version');
     t.end();
 });
@@ -33,7 +34,6 @@ test('help', function(t) {
     t.plan(8);
 
     var opts;
-
     function cb(err, msg) {
         t.equals(err, null);
     }
@@ -51,15 +51,15 @@ test('help', function(t) {
     t.equals(main(opts, cb), 'help');
 });
 
-test('nonesuch', {skip:true}, function(t) {
+test('info', {skip:true}, function(t) {
     t.plan(2);
 
-    var opts = optimist.parse(['nonesuch']);
-
+    var opts;
     function cb(err, msg) {
         t.equals(1, 2);
     }
 
+    opts = optimist.parse(['nonesuch']);
     t.equals(main(opts, cb), 'nonesuch');
 });
 

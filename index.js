@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-/*
- * Copyright (c) 2011-2013, Yahoo! Inc.  All rights reserved.
- * Copyrights licensed under the New BSD License.
+/**
+ * Copyright (c) 2013 Yahoo! Inc.  All rights reserved.
+ * Copyrights licensed under the MIT License.
  * See the accompanying LICENSE file for terms.
  */
 // todo: replace config-chains from cwd(), ~, defaults
-// todo: better logging
+// todo: logging
 /*jshint node:true */
 'use strict';
 
@@ -20,7 +20,7 @@ var path = require('path'),
 
 
 function done(err, msg) {
-    //console[err ? 'error' : 'info'](err || msg);
+    console[err ? 'error' : 'info'](err || msg);
 }
 
 function main(opts, cb) {
@@ -42,7 +42,7 @@ function main(opts, cb) {
     if(builtin.hasOwnProperty(cmd)) {
         require(builtin[cmd]).run(args, opts, cb);
     } else {
-        pass(cmd, args, opts, cb);
+        pass.run(cmd, args, opts, cb);
     }
 
     return cmd;
