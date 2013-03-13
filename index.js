@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2013 Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the MIT License.
@@ -10,7 +9,7 @@
 'use strict';
 
 var path = require('path'),
-    opts = require('optimist').argv,
+    opti = require('optimist'),
     pass = require('./passthru'),
     builtin = {
         'help': './help',
@@ -18,13 +17,9 @@ var path = require('path'),
         'create': 'mojito-create'
     };
 
-
-function done(err, msg) {
-    console[err ? 'error' : 'info'](err || msg);
-}
-
-function main(opts, cb) {
-    var args = opts._,
+function main(argv, cb) {
+    var opts = opti.parse(argv),
+        args = opts._,
         cmd = args.shift();
 
     // inferred commands
@@ -46,10 +41,6 @@ function main(opts, cb) {
     }
 
     return cmd;
-}
-
-if (require.main === module) {
-    main(opts, done);
 }
 
 module.exports = main;
