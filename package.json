@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "command line utilities for mojito",
   "bin": {
-    "mo": "bin/cli.js"
+    "mo": "bin/mojito"
   },
   "preferGlobal": true,
   "dependencies": {
