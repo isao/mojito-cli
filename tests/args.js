@@ -33,7 +33,6 @@ test('help', function(t) {
     t.equals(main([], cb), 'help');
     t.equals(main(['--help'], cb), 'help');
     t.equals(main(['help'], cb), 'help');
-
     t.equals(main(['--foo', 'help'], cb), 'help');
 });
 
