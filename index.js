@@ -3,7 +3,7 @@
  * Copyrights licensed under the MIT License.
  * See the accompanying LICENSE file for terms.
  */
-// todo: replace config-chains from cwd(), ~, defaults
+// todo: replace builtin var w/ config-chains from cwd(), ~, defaults
 // todo: logging
 /*jshint node:true */
 'use strict';
@@ -16,6 +16,7 @@ var path = require('path'),
         'version': './version',
         'create': 'mojito-create'
     };
+
 
 function main(argv, cb) {
     var opts = opti.parse(argv),
