@@ -26,6 +26,7 @@ function isMojitoApp(dir) {
 
 function run(mojito_cmd, args, opts, cb) {
     var cli;
+    //isMojitoApp(?);
     cli = opts.cliMock || require(path.resolve(clipath));
     cli.run([mojito_cmd].concat(args), opts, cb);
 }
