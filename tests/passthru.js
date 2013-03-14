@@ -28,7 +28,7 @@ test('fail case', function(t) {
     t.plan(2);
 
     function cb(err, msg) {
-        t.equal(err, 'unable to invoke command jslint');
+        t.equal(err, 'unable to invoke command "jslint"');
     }
 
     var result = pass.run('jslint', ['hey booboo'], {}, cb);
