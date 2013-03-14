@@ -9,6 +9,6 @@ test('index exports', function (t) {
 
 test('passthru exports', function (t) {
     var module = require('../passthru');
-    t.same(Object.keys(module), ['run','isMojitoApp']);
+    t.same(Object.keys(module), ['run','isMojitoApp', 'setpath']);
     t.end();
 });

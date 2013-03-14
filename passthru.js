@@ -4,34 +4,47 @@
  * See the accompanying LICENSE file for terms.
  */
 
-var clipath = 'node_modules/mojito/lib/management/cli.js',
-    path = require('path');
+var resolve = require('path').resolve,
+    clipath = 'node_modules/mojito/lib/management/cli.js';
 
 function isMojitoApp(dir) {
     var pkg = {},
         ok = false;
 
     try {
-        pkg = require(path.resolve(dir, 'package.json'));
+        pkg = require(resolve(dir, 'package.json'));
+        ok = pkg.dependencies && pkg.dependencies.mojito;
     } catch(err) {
     }
 
-    ok = pkg.dependencies && pkg.dependencies.mojito;
-    //todo: chk for installed mojito too
+    //todo: verify that the filesystem contains mojito app-like stuff
     //if(ok) {
     //
     //}
     return ok;
 }
 
-function run(mojito_cmd, args, opts, cb) {
-    var cli;
+function run(cmd, args, opts, cb) {
+    var oldcli;
     //isMojitoApp(?);
-    cli = opts.cliMock || require(path.resolve(clipath));
-    cli.run([mojito_cmd].concat(args), opts, cb);
+    try {
+        oldcli = require(resolve(clipath));
+        oldcli.run([cmd].concat(args), cb);
+    } catch(err) {
+        cb('unable to invoke command "' + cmd + '"'); // todo: use err obj
+    }
+
+    return oldcli;
+}
+
+function setpath(newpath) {
+    var oldpath = clipath;
+    clipath = newpath;
+    return oldpath;
 }
 
 module.exports = {
     run: run,
-    isMojitoApp: isMojitoApp
+    isMojitoApp: isMojitoApp,
+    setpath: setpath
 };
