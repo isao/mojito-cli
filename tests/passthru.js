@@ -5,7 +5,7 @@ var test = require('tape'),
 
 function noop() {}
 
-test('run', function(t) {
+test('mocked jslint', function(t) {
     t.plan(2);
 
     function mock(args, opts, cb) {
@@ -20,11 +20,11 @@ test('run', function(t) {
                 run: mock
             }
         };
-    
-	pass.run('jslint', ['hey booboo'], options, noop);
+
+    pass.run('jslint', ['hey booboo'], options, noop);
 });
 
-test('run', function(t) {
+test('cwd is not a mojito app dir', function(t) {
     var ok = pass.isMojitoApp('');
     t.notOk(ok);
     t.end();
