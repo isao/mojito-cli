@@ -9,7 +9,6 @@
 var optimist = require('optimist'),
     log = require('./log'),
     pass = require('./passthru'),
-
     info = require('./package.json'),
     builtin;
 
@@ -31,7 +30,7 @@ function main(argv, cb) {
         }
     }
 
-    // dispatch command
+    // dispatch the command
     if(builtin.hasOwnProperty(cmd)) {
         if('string' === typeof builtin[cmd]) {
             require(builtin[cmd]).run(args, opts, cb);
