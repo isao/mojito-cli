@@ -1,31 +1,36 @@
 var test = require('tape'),
     optimist = require('optimist'),
-    pass = require('../passthru');
+    pass = require('../passthru'),
+
+    resolve = require('path').resolve,
+    fakecli = 'fixtures/someapp/node_modules/mojito/lib/management/cli.js',
+    testpath = resolve(__dirname, fakecli);
 
 
-function noop() {}
+test('someapp jslint', function(t) {
+    t.plan(1);
 
-test('mocked jslint', function(t) {
-    t.plan(2);
-
-    function mock(args, opts, cb) {
-        t.equal(args[0], 'jslint');
-        t.same(options, opts);
+    function cb(err, msg) {
+        t.equal(msg, 'you want me to jslint?');
     }
 
-    var options = {
-            picnic: true,
-            baskets: 3,
-            cliMock: {
-                run: mock
-            }
-        };
-
-    pass.run('jslint', ['hey booboo'], options, noop);
+    var oldpath = pass.setpath(testpath);
+    pass.run('jslint', ['app'], {}, cb);
+    pass.setpath(oldpath);
 });
 
 test('cwd is not a mojito app dir', function(t) {
-    var ok = pass.isMojitoApp('');
-    t.notOk(ok);
+    t.notOk(pass.isMojitoApp('.'));
     t.end();
+});
+
+test('fail case', function(t) {
+    t.plan(2);
+
+    function cb(err, msg) {
+        t.equal(err, 'unable to invoke command jslint');
+    }
+
+    var result = pass.run('jslint', ['hey booboo'], {}, cb);
+    t.notOk(result)
 });
