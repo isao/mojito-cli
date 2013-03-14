@@ -3,40 +3,41 @@
  * Copyrights licensed under the MIT License.
  * See the accompanying LICENSE file for terms.
  */
-// todo: replace builtin var w/ config-chains from cwd(), ~, defaults
-// todo: logging
 /*jshint node:true */
 'use strict';
 
-var path = require('path'),
-    opti = require('optimist'),
+var optimist = require('optimist'),
+    log = require('./log'),
     pass = require('./passthru'),
-    builtin = {
-        'help': './help',
-        'version': './version',
-        'create': 'mojito-create'
-    };
+
+    info = require('./package.json'),
+    builtin;
 
 
 function main(argv, cb) {
-    var opts = opti.parse(argv),
-        args = opts._,
+    var opts = optimist.parse(argv),
+        args = opts._, // args without "-" or "--" prefixes, or after bare "--"
         cmd = args.shift();
 
-    // inferred commands
+    // commands inferred from options
     if(!cmd) {
         if(opts.version) {
             cmd = 'version';
         } else if(opts.help) {
             cmd = 'help';
         } else {
-            //console.error('error: no command provided.');
+            log.error('Missing command parameter.');
             cmd = 'help';
         }
     }
 
+    // dispatch command
     if(builtin.hasOwnProperty(cmd)) {
-        require(builtin[cmd]).run(args, opts, cb);
+        if('string' === typeof builtin[cmd]) {
+            require(builtin[cmd]).run(args, opts, cb);
+        } else {
+            builtin[cmd](args, opts, cb);
+        }
     } else {
         pass.run(cmd, args, opts, cb);
     }
@@ -44,4 +45,26 @@ function main(argv, cb) {
     return cmd;
 }
 
-module.exports = main;
+function help(args, opts, cb) {
+    cb(null, [
+        'Usage: ', Object.keys(info.bin)[0], ' <command> [options]\n',
+        'Commands: help, version, create' // FIXME
+    ].join(''));
+}
+
+function version(args, opts, cb) {
+    cb(null, info.name + ' v' + info.version);
+}
+
+builtin = {
+    'create': 'mojito-create',
+    'help': help,
+    'version': version
+};
+
+module.exports = {
+    run: main,
+    log: log,
+    name: info.name,
+    version: info.version
+};
