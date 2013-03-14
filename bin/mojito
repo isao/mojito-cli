@@ -7,9 +7,9 @@
 var cli = require('../');
 
 cli.run(process.argv.slice(2), function done(err, msg) {
-    var out;
     if(err) {
-    	out = err instanceof Error ? err.message : err;
+    	cli.log.error(err instanceof Error ? err.message : err);
+    	//todo put stack trace, orig error string in log file like npm does
     } else if(msg) {
     	cli.log.info('ok', msg);
     }
