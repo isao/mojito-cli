@@ -61,11 +61,11 @@ test('create', function(t) {
     t.end();
 });
 
-test('SKIP', {skip:true}, function(t) {
+test('nonesuch', function(t) {
     t.plan(2);
 
     function cb(err, msg) {
-        t.equals(1, 2);
+        t.equals(err, 'unable to invoke command "nonesuch"');
     }
 
     t.equals(cli.run(['nonesuch'], cb), 'nonesuch');
