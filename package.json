@@ -20,9 +20,9 @@
   },
   "scripts": {
     "preinstall": "\n#\n# Note, if mojito is installed globally, uninstall it first to use this package.\n#",
-    "test": "tape tests/*.js",
-    "cover": "istanbul cover --dir reports/coverage node_modules/.bin/tape tests/*.js",
-    "plato": "plato -d reports/plato *.js"
+    "test": "tape tests/*.js | tee tests/results.tap",
+    "cover": "istanbul cover --dir artifacts/coverage node_modules/.bin/tape tests/*.js",
+    "plato": "plato -d artifacts/plato *.js"
   },
   "repository": "git://github.com/isao/mojito-cli.git",
   "author": "Isao Yagi <isao@yahoo-inc.com>",
