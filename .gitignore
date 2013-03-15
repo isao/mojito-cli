@@ -1,4 +1,3 @@
-/coverage
-!node_modules/mojito-create
-node_modules
-reports
+/artifacts
+/node_modules
+!/node_modules/mojito-create
