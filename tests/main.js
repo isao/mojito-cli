@@ -6,37 +6,20 @@ cli.log.pause();// don't output anything
 function noop() {
 }
 
-// exports['missing command'] = function(t) {
-//
-// FIXME!
-// main
-// ✖ missing command
-//
-// Error: Expected 4 assertions, 2 ran
-//     at Object.exports.test.test.done (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/lib/types.js:121:25)
-//     at Object.exports.missing command (/Users/isao/Repos/wip/mojito-cli/tests/main.js:21:7)
-//     at Object.wrapTest (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/lib/core.js:235:16)
-//     at wrapTest (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/lib/core.js:235:16)
-//     at Object.exports.runTest (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/lib/core.js:69:9)
-//     at exports.runSuite (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/lib/core.js:117:25)
-//     at _concat (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/deps/async.js:508:13)
-//     at async.forEachSeries.iterate (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/deps/async.js:118:13)
-//     at async.forEachSeries (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/deps/async.js:134:9)
-//     at _concat (/Users/isao/Repos/wip/mojito-cli/node_modules/nodeunit/deps/async.js:507:9)
-//
-//     t.expect(4);
-//
-//     cli.log.once('log.error', function(m) {
-//         t.equal(m.prefix, 'Missing command parameter.', 'err msg is wrong');
-//         process.nextTick(function() {
-//             t.deepEqual(m, cli.log.record.pop(), 'err msg obj is same');
-//             t.equal(0, cli.log.record.length, 'log stack empty');
-//         });
-//     });
-//
-//     t.equal(cli.run([], noop), 'help');
-//     t.done();
-// };
+exports['missing command'] = function(t) {
+    t.expect(4);
+
+    cli.log.once('log.error', function(m) {
+        t.equal(m.prefix, 'Missing command parameter.', 'err msg is wrong');
+        process.nextTick(function() {
+            t.deepEqual(m, cli.log.record.pop(), 'err msg obj is same');
+            t.equal(0, cli.log.record.length, 'log stack empty');
+            t.done();
+        });
+    });
+
+    t.equal(cli.run([], noop), 'help');
+};
 
 exports['help'] = function(t) {
     t.expect(8);
