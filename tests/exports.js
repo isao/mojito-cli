@@ -1,14 +1,11 @@
-var test = require('tape');
-
-
-test('index exports', function (t) {
+exports['index exports'] = function (t) {
     var module = require('../');
-    t.same(Object.keys(module), ['run','log','name','version']);
-    t.end();
-});
+    t.deepEqual(Object.keys(module), ['run','log','name','version']);
+    t.done();
+};
 
-test('passthru exports', function (t) {
+exports['passthru exports'] = function (t) {
     var module = require('../passthru');
-    t.same(Object.keys(module), ['run','isMojitoApp', 'setpath']);
-    t.end();
-});
+    t.deepEqual(Object.keys(module), ['run','isMojitoApp', 'setpath']);
+    t.done();
+};
