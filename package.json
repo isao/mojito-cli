@@ -1,13 +1,13 @@
 {
   "name": "mojito-cli",
-  "version": "0.0.0",
+  "version": "0.0.0PR1",
   "description": "command line utilities for mojito",
   "bin": {
     "mo": "bin/mojito"
   },
   "preferGlobal": true,
   "dependencies": {
-    "mojito-create": "*",
+    "mojito-create": "git://github.com/isao/mojito-create.git",
     "npmlog": "0.0.2",
     "optimist": "~0.3.5"
   },
@@ -16,7 +16,7 @@
     "istanbul": "~0.1.32"
   },
   "scripts": {
-    "preinstall": "\n#\n# Note, if mojito is installed globally, uninstall it first to use this package.\n#",
+    "preinstall": "#npm rm -g mojito",
     "test": "tape tests/*.js | tee tests/results.tap",
     "cover": "istanbul cover --dir artifacts/coverage node_modules/.bin/tape tests/*.js",
     "plato": "plato -d artifacts/plato *.js"
