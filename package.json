@@ -17,8 +17,8 @@
   },
   "scripts": {
     "preinstall": "#npm rm -g mojito",
-    "test": "tape tests/*.js | tee tests/results.tap",
-    "cover": "istanbul cover --dir artifacts/coverage node_modules/.bin/tape tests/*.js",
+    "test": "nodeunit --reporter junit --output artifacts tests",
+    "cover": "istanbul cover --dir artifacts/coverage -- node_modules/nodeunit/bin/nodeunit --reporter `pwd`/node_modules/nodeunit/lib/reporters/junit.js --output artifacts tests",
     "plato": "plato -d artifacts/plato *.js"
   },
   "repository": "git://github.com/isao/mojito-cli.git",
