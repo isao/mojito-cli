@@ -3,7 +3,7 @@
   "version": "0.0.0PR1",
   "description": "command line utilities for mojito",
   "bin": {
-    "mo": "bin/mojito"
+    "mojito": "bin/mojito"
   },
   "preferGlobal": true,
   "dependencies": {
@@ -16,7 +16,7 @@
     "nodeunit": "~0.7.4"
   },
   "scripts": {
-    "preinstall": "#npm rm -g mojito",
+    "preinstall": "npm rm -sg mojito",
     "test": "nodeunit --reporter junit --output artifacts tests",
     "cover": "istanbul cover --dir artifacts/coverage -- node_modules/nodeunit/bin/nodeunit --reporter `pwd`/node_modules/nodeunit/lib/reporters/junit.js --output artifacts tests",
     "plato": "plato -d artifacts/plato *.js"
