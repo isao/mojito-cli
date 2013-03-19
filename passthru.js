@@ -13,25 +13,28 @@ function isMojitoApp(dir) {
 
     try {
         pkg = require(resolve(dir, 'package.json'));
-        ok = pkg.dependencies && pkg.dependencies.mojito;
+        ok = pkg.dependencies && pkg.dependencies.mojito && true;
     } catch(err) {
     }
 
-    //todo: verify that the filesystem contains mojito app-like stuff
-    //if(ok) {
-    //
-    //}
     return ok;
 }
 
 function run(cmd, args, opts, cb) {
-    var oldcli;
-    //isMojitoApp(?);
+    var oldcli,
+        appdir = opts.cwd || process.cwd();
+
+    if(!isMojitoApp(appdir)) {
+        cb('Not in a mojito application directory (no ./package.json:dependencies.mojito)');
+        return;
+    }
+
     try {
         oldcli = require(resolve(clipath));
+        console.log(oldcli);
         oldcli.run([cmd].concat(args), cb);
     } catch(err) {
-        cb('unable to invoke command "' + cmd + '"'); // todo: use err obj
+        cb('Unable to invoke command "' + cmd + '"'); // todo: use err obj
     }
 
     return oldcli;

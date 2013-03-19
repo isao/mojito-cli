@@ -1,4 +1,5 @@
-var cli = require('../');
+var cli = require('../'),
+    appdir = require('path').resolve(__dirname, 'fixtures/someapp');
 
 
 cli.log.pause();// don't output anything
@@ -65,11 +66,15 @@ exports['create'] = function(t) {
 exports['nonesuch'] = function(t) {
     t.expect(2);
 
+    var cwd = process.cwd(); //fixme
+    process.chdir(appdir);
+
     function cb(err, msg) {
-        t.equals(err, 'unable to invoke command "nonesuch"');
+        t.equals(msg, 'you want me to nonesuch?');
+        process.chdir(cwd);
     }
 
-    t.equals(cli.run(['nonesuch'], cb), 'nonesuch');
+    t.equals(cli.run(['nonesuch', '--cwd', appdir], cb), 'nonesuch');
     t.done();
 };
 
