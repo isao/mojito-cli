@@ -56,6 +56,7 @@ function version(args, opts, cb) {
 }
 
 builtin = {
+    //command -> require string or function
     'create': 'mojito-create',
     'help': help,
     'version': version
