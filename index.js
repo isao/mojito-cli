@@ -6,19 +6,70 @@
 /*jshint node:true */
 'use strict';
 
-var optimist = require('optimist'),
-    log = require('./log'),
-    pass = require('./passthru'),
-    info = require('./package.json'),
-    builtin;
+var log = require('./lib/log'),
+    nopt = require('nopt'),
+    getmoj = require('./lib/mojmeta'),
+    getapp = require('./lib/appmeta'),
+
+    options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
+    aliases = {h: '--help', v: '--version', info: '--version', d: '--debug'},
+    builtin,
+    external;
 
 
-function main(argv, cb) {
-    var opts = optimist.parse(argv),
-        args = opts._, // args without "-" or "--" prefixes, or after bare "--"
-        cmd = args.shift();
+function help(meta) {
+    var these = Object.keys(options),
+        commands = meta.mojito ? these.concat(meta.mojito.commands) : these;
 
-    // commands inferred from options
+    log.info('Usage: %s <command> [options]', meta.cli.binname);
+    log.info('The %s package provides command line helpers for mojito developers.', meta.cli.name);
+    log.info('Available commands: %s', commands.join(', '));
+    if (!meta.mojito) {
+        log.info(
+            'Additional commands are available from within an application'
+            + ' directory that has\nmojito installed.'
+        );
+    }
+}
+
+function version(meta) {
+
+}
+
+function getmeta(cwd) {
+    var cli,
+        app,
+        mojito,
+        meta = module.exports.meta;
+
+    cli = require('./package');
+    meta.cli = {
+        name: cli.name,
+        binname: Object.keys(cli.bin)[0],
+        version: cli.version
+    };
+    log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
+
+    meta.app = getapp(cwd);
+    if (meta.app) {
+        mojito = getmoj(cwd);
+    }
+
+    return meta;
+}
+
+function main(argv, cwd, cb) {
+    var opts = nopt(options, aliases, argv, 0),
+        args = opts.argv.remain.concat(),
+        cmd = args.shift(),
+        meta;
+
+    delete opts.argv;
+
+    if (opts.debug) {
+        log.level = 'debug';
+    }
+
     if(!cmd) {
         if(opts.version) {
             cmd = 'version';
@@ -30,37 +81,29 @@ function main(argv, cb) {
         }
     }
 
-    // dispatch the command
-    if(builtin.hasOwnProperty(cmd)) {
-        if('string' === typeof builtin[cmd]) {
-            require(builtin[cmd]).run(args, opts, cb);
-        } else {
-            builtin[cmd](args, opts, cb);
-        }
-    } else {
-        pass.run(cmd, args, opts, cb);
+    meta = getmeta(cwd);
+
+    if (builtin.hasOwnProperty(cmd)) {
+        builtin[cmd](meta, cb);
+        return;
     }
 
     return cmd;
 }
 
-function help(args, opts, cb) {
-    cb(null, [
-        'Usage: ', Object.keys(info.bin)[0], ' <command> [options]\n',
-        'Commands: help, version, create' // FIXME
-    ].join(''));
-}
-
-function version(args, opts, cb) {
-    cb(null, info.name + ' v' + info.version);
-}
-
 builtin = {
-    //command -> require string or function
-    'create': 'mojito-create',
     'help': help,
-    'version': version
+    'version': version,
+};
+
+external = {
+    'create': './mojito-create'
 };
 
 module.exports = main;
 module.exports.log = log;
+module.exports.meta = {
+    cli: null,
+    app: null,
+    mojito: null
+};
