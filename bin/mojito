@@ -4,13 +4,17 @@
  * Copyrights licensed under the MIT License.
  * See the accompanying LICENSE file for terms.
  */
-var cli = require('../');
+var cli = require('../'),
+    log = cli.log;
 
-cli.run(process.argv.slice(2), function done(err, msg) {
+
+function done(err, msg) {
     if(err) {
-    	cli.log.error(err instanceof Error ? err.message : err);
+    	log.error(err instanceof Error ? err.message : err);
     	//todo put stack trace, orig error string in log file?
     } else if(msg) {
-    	cli.log.info(msg);
+    	log.info(msg);
     }
-});
+}
+
+cli(process.argv.slice(2), process.cwd(), done);

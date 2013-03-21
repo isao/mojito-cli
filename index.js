@@ -62,9 +62,5 @@ builtin = {
     'version': version
 };
 
-module.exports = {
-    run: main,
-    log: log,
-    name: info.name,
-    version: info.version
-};
+module.exports = main;
+module.exports.log = log;
