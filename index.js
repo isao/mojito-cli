@@ -8,13 +8,16 @@
 
 var log = require('./lib/log'),
     nopt = require('nopt'),
-    getmoj = require('./lib/mojmeta'),
-    getapp = require('./lib/appmeta'),
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
-    builtin,
-    external;
+
+    getmoj = require('./lib/mojmeta'),
+    getapp = require('./lib/appmeta'),
+    handoff = require('./lib/handoff'),
+
+    builtin, // function map
+    bundled; // package name map
 
 
 function help(meta) {
@@ -26,8 +29,8 @@ function help(meta) {
     log.info('Available commands: %s', every.join(', '));
     if (!meta.mojito) {
         log.info(
-            'Additional commands are available from within an application'
-            + ' directory that has\nmojito installed.'
+            'Additional commands are available from within an application ' +
+            'directory that has\nmojito installed.'
         );
     }
 }
@@ -40,6 +43,7 @@ function version(meta) {
         if (!(meta.app.dependencies && meta.app.dependencies.mojito)) {
             log.warn('Mojito is not listed as a dependency in your package.json. Fix with:');
             log.warn('    npm install mojito --save');
+            log.warn('');
         }
     }
 
@@ -73,15 +77,14 @@ function getmeta(cwd) {
 function main(argv, cwd, cb) {
     var opts = nopt(options, aliases, argv, 0),
         args = opts.argv.remain.concat(),
-        cmd = args.shift(),
+        cmd = (args.shift() || '').toLowerCase(),
         meta;
-
-    delete opts.argv; // do not need original, cooked
 
     if (opts.debug) {
         log.level = 'debug';
     }
 
+    // treat lone --help and --version flags like commands
     if(!cmd) {
         if(opts.version) {
             cmd = 'version';
@@ -93,16 +96,28 @@ function main(argv, cwd, cb) {
         }
     }
 
+    // alias info to version
     if ('info' === cmd) {
-        cmd = 'version'; // alias
+        cmd = 'version';
     }
 
-    log.debug('command: %s, args: %j, options: %j', cmd, args, opts);
+    log.debug('cmd: %s, args: %j, opts: %j', cmd, args, opts);
+
+    // collect some metadata from available package.json files
     meta = getmeta(cwd);
 
+    // dispatch/handoff the command
     if (builtin.hasOwnProperty(cmd)) {
         builtin[cmd](meta, cb);
-        return;
+
+    } else if(meta.mojito && meta.mojito.commands.indexOf(cmd)) {
+        handoff(cmd, args, opts, cb);
+
+    } else if(bundled.hasOwnProperty(cmd)) {
+        handoff.require(bundled[cmd], args, opts, cb);
+
+    } else {
+        handoff.toShell('mojito-' + cmd, args, opts);
     }
 
     return cmd;
@@ -110,11 +125,11 @@ function main(argv, cwd, cb) {
 
 builtin = {
     'help': help,
-    'version': version,
+    'version': version
 };
 
-external = {
-    'create': './mojito-create'
+bundled = {
+    'create': 'mojito-create'
 };
 
 module.exports = main;
