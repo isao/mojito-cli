@@ -12,18 +12,18 @@ var log = require('./lib/log'),
     getapp = require('./lib/appmeta'),
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
-    aliases = {h: '--help', v: '--version', info: '--version', d: '--debug'},
+    aliases = {h: '--help', v: '--version', d: '--debug'},
     builtin,
     external;
 
 
 function help(meta) {
-    var these = Object.keys(options),
-        commands = meta.mojito ? these.concat(meta.mojito.commands) : these;
+    var basic = Object.keys(options),
+        every = meta.mojito ? basic.concat(meta.mojito.commands) : basic;
 
     log.info('Usage: %s <command> [options]', meta.cli.binname);
     log.info('The %s package provides command line helpers for mojito developers.', meta.cli.name);
-    log.info('Available commands: %s', commands.join(', '));
+    log.info('Available commands: %s', every.join(', '));
     if (!meta.mojito) {
         log.info(
             'Additional commands are available from within an application'
@@ -33,7 +33,19 @@ function help(meta) {
 }
 
 function version(meta) {
+    log.info('%s v%s', meta.cli.name, meta.cli.version);
 
+    if (meta.app) {
+        log.info('%s v%s', meta.app.name, meta.app.version);
+        if (!(meta.app.dependencies && meta.app.dependencies.mojito)) {
+            log.warn('Mojito is not listed as a dependency in your package.json. Fix with:');
+            log.warn('    npm install mojito --save');
+        }
+    }
+
+    if (meta.mojito) {
+        log.info('%s v%s (installed locally)', meta.mojito.name, meta.mojito.version);
+    }
 }
 
 function getmeta(cwd) {
@@ -52,7 +64,7 @@ function getmeta(cwd) {
 
     meta.app = getapp(cwd);
     if (meta.app) {
-        mojito = getmoj(cwd);
+        meta.mojito = getmoj(cwd);
     }
 
     return meta;
@@ -64,7 +76,7 @@ function main(argv, cwd, cb) {
         cmd = args.shift(),
         meta;
 
-    delete opts.argv;
+    delete opts.argv; // do not need original, cooked
 
     if (opts.debug) {
         log.level = 'debug';
@@ -81,6 +93,11 @@ function main(argv, cwd, cb) {
         }
     }
 
+    if ('info' === cmd) {
+        cmd = 'version'; // alias
+    }
+
+    log.debug('command: %s, args: %j, options: %j', cmd, args, opts);
     meta = getmeta(cwd);
 
     if (builtin.hasOwnProperty(cmd)) {
