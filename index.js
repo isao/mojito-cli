@@ -117,7 +117,7 @@ function main(argv, cwd, cb) {
         handoff.require(bundled[cmd], args, opts, cb);
 
     } else {
-        handoff.toShell('mojito-' + cmd, args, opts);
+        handoff.shell('mojito-' + cmd, args, opts);
     }
 
     return cmd;
