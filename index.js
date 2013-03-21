@@ -119,19 +119,19 @@ function main(argv, cwd, cb) {
 
     // dispatch/handoff the command
     if (builtin.hasOwnProperty(cmd)) {
-        // function
+        log.debug('runnning local function');
         builtin[cmd](meta, cb);
 
     } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
-        // delegate to bundled mojito
+        log.debug('delegating to %s/%s', meta.mojito.commands.path, cmd);
         handoff(cmd, meta, opts, cb);
 
     } else if (bundled.hasOwnProperty(cmd)) {
-        // delegate to bundled mojito-cli command
+        log.debug('delegating %s to %s', cmd, bundled[cmd]);
         handoff.require(bundled[cmd], opts, cb);
 
     } else {
-        // shell out
+        log.debug('shelling out to %s/%s', PREFIX + cmd);
         handoff.shell(PREFIX + cmd, opts, process.env);
     }
 
