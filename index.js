@@ -22,7 +22,7 @@ var log = require('./lib/log'),
     PREFIX = 'mojito-'; // um.
 
 
-function help(meta) {
+function help(meta, cb) {
     var basic = Object.keys(options),
         every = meta.mojito ? basic.concat(meta.mojito.commands) : basic;
 
@@ -37,7 +37,7 @@ function help(meta) {
     }
 }
 
-function version(meta) {
+function version(meta, cb) {
     var appdeps = meta.app && meta.app.dependencies;
 
     log.info('%s v%s', meta.cli.name, meta.cli.version);
@@ -82,9 +82,9 @@ function getmeta(cwd) {
 
 function altcmd(opts) {
     var cmd;
-    if(opts.version) {
+    if (opts.version) {
         cmd = 'version';
-    } else if(opts.help) {
+    } else if (opts.help) {
         cmd = 'help';
     } else {
         log.error('No command...');
@@ -103,7 +103,7 @@ function main(argv, cwd, cb) {
     }
 
     // treat lone --help and --version flags like commands
-    if(!cmd) {
+    if (!cmd) {
         cmd = altcmd(opts);
     }
 
@@ -122,16 +122,16 @@ function main(argv, cwd, cb) {
         // function
         builtin[cmd](meta, cb);
 
-    } else if(meta.mojito && meta.mojito.commands.indexOf(cmd)) {
+    } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
         // delegate to bundled mojito
-        handoff(cmd, opts, cb);
+        handoff(cmd, meta, opts, cb);
 
-    } else if(bundled.hasOwnProperty(cmd)) {
+    } else if (bundled.hasOwnProperty(cmd)) {
         // delegate to bundled mojito-cli command
         handoff.require(bundled[cmd], opts, cb);
 
     } else {
-        // shell out and hope for the best
+        // shell out
         handoff.shell(PREFIX + cmd, opts, process.env);
     }
 
