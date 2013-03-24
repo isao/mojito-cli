@@ -28,6 +28,8 @@ function version(meta, opts, cb) {
     if (meta.mojito) {
         log.info('%s v%s (installed locally)', meta.mojito.name, meta.mojito.version);
     }
+
+    cb();
 }
 
 module.exports = version;
