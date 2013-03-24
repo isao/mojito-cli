@@ -20,57 +20,21 @@ var log = require('./lib/log'),
     bundled; // package name map
 
 
-function help(meta, cb) {
-    var basic = Object.keys(options).concat(Object.keys(bundled)),
-        every = meta.mojito ? basic.concat(meta.mojito.commands) : basic;
-
-    log.info('Usage: %s <command> [options]', meta.cli.binname);
-    log.info('The %s package provides command line helpers for mojito developers.', meta.cli.name);
-    log.info('Available commands: %s', every.join(', '));
-    if (!meta.mojito) {
-        log.info(
-            'Additional commands are available from within an application ' +
-            'directory that has\nmojito installed.'
-        );
-    }
-}
-
-function version(meta, cb) {
-    var appdeps = meta.app && meta.app.dependencies;
-
-    log.info('%s v%s', meta.cli.name, meta.cli.version);
-
-    if (appdeps) {
-        log.info('%s v%s', meta.app.name, meta.app.version);
-        if (appdeps && appdeps.mojito) {
-            log.info('declared dependencies: %s', Object.keys(appdeps).join(', '));
-        } else {
-            log.warn('Mojito is not listed as a dependency in your package.json. Fix with:');
-            log.warn('    npm install mojito --save');
-            log.warn('');
-        }
-    }
-
-    if (meta.mojito) {
-        log.info('%s v%s (installed locally)', meta.mojito.name, meta.mojito.version);
-    }
-}
-
 function getmeta(cwd) {
-    var cli,
-        app,
+    var app,
         mojito,
+        cli = require('./package'),
         meta = module.exports.meta;
 
-    cli = require('./package');
+    log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
     meta.cli = {
         name: cli.name,
         binname: Object.keys(cli.bin)[0],
         version: cli.version
     };
-    log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
 
     meta.app = getapp(cwd);
+
     if (meta.app) {
         meta.mojito = getmoj(cwd);
     }
@@ -105,32 +69,24 @@ function main(argv, cwd, cb) {
         cmd = altcmd(opts);
     }
 
-    // alias info to version
-    if ('info' === cmd) {
-        cmd = 'version';
-    }
-
     log.debug('cmd: %s, opts: %j', cmd, opts);
 
     // collect some metadata from available package.json files
     meta = getmeta(cwd);
 
-    // dispatch/handoff the command
-    if (builtin.hasOwnProperty(cmd)) {
+    // do cmd
+    if ('help' === cmd) {
+        
+
+    } else if (builtin.hasOwnProperty(cmd)) {
         log.debug('runnning local function');
-        builtin[cmd](meta, cb);
+        handoff(builtin[cmd], meta, opts, cb);
 
     } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
         log.debug('delegating to %s/%s', meta.mojito.commands.path, cmd);
-        handoff(cmd, meta, opts, cb);
-
-    } else if (bundled.hasOwnProperty(cmd)) {
-        log.debug('delegating %s to %s', cmd, bundled[cmd]);
-        handoff.require(bundled[cmd], opts, cb);
+        handoff.legacy(cmd, meta, opts, cb);
 
     } else {
-        //log.debug('shelling out to %s/%s', PREFIX + cmd);
-        //handoff.shell(PREFIX + cmd, opts, process.env);
         log.error('Unable to execute command %s', cmd);
         help(meta, cb);
     }
@@ -139,8 +95,9 @@ function main(argv, cwd, cb) {
 }
 
 builtin = {
-    'help': help,
-    'version': version
+    'help': '../comamnds/help',
+    'info': '../commands/version',
+    'version': '../commands/version'
 };
 
 bundled = {
