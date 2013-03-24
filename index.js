@@ -83,7 +83,6 @@ function main(argv, cwd, cb) {
         handoff(builtin[cmd], meta, opts, cb);
 
     } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
-        log.debug('delegating to %s/%s', meta.mojito.commands.path, cmd);
         handoff.legacy(cmd, meta, opts, cb);
 
     } else {
