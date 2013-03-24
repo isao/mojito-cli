@@ -17,13 +17,11 @@ var log = require('./lib/log'),
     handoff = require('./lib/handoff'),
 
     builtin, // function map
-    bundled, // package name map
-
-    PREFIX = 'mojito-'; // um.
+    bundled; // package name map
 
 
 function help(meta, cb) {
-    var basic = Object.keys(options),
+    var basic = Object.keys(options).concat(Object.keys(bundled)),
         every = meta.mojito ? basic.concat(meta.mojito.commands) : basic;
 
     log.info('Usage: %s <command> [options]', meta.cli.binname);
@@ -131,8 +129,10 @@ function main(argv, cwd, cb) {
         handoff.require(bundled[cmd], opts, cb);
 
     } else {
-        log.debug('shelling out to %s/%s', PREFIX + cmd);
-        handoff.shell(PREFIX + cmd, opts, process.env);
+        //log.debug('shelling out to %s/%s', PREFIX + cmd);
+        //handoff.shell(PREFIX + cmd, opts, process.env);
+        log.error('Unable to execute command %s', cmd);
+        help(meta, cb);
     }
 
     return cmd;
