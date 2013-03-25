@@ -12,10 +12,8 @@ var resolve = require('path').resolve,
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
-
     getmoj = require('./lib/mojmeta'),
     getapp = require('./lib/appmeta'),
-    builtin, // function map
     bundled; // package name map
 
 
@@ -30,7 +28,7 @@ function getmeta(cwd) {
         name: cli.name,
         binname: Object.keys(cli.bin)[0],
         version: cli.version,
-        commands: Object.keys(builtin).concat(Object.keys(bundled)).sort()
+        commands: Object.keys(bundled).sort()
     };
 
     meta.app = getapp(cwd);
@@ -68,9 +66,9 @@ function exec(cmd, args, opts, meta, cb) {
     if (('help' === cmd) && opts.argv.remain.length) {
 
 
-    } else if (builtin.hasOwnProperty(cmd)) {
-        log.debug('runnning local command %s', builtin[cmd]);
-        mod = load(builtin[cmd]);
+    } else if (bundled.hasOwnProperty(cmd)) {
+        log.debug('runnning local command %s', bundled[cmd]);
+        mod = load(bundled[cmd]);
         mod(args, opts, meta, cb);
 
     } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
@@ -102,14 +100,11 @@ function main(argv, cwd, cb) {
     return cmd;
 }
 
-builtin = {
+bundled = {
+    'create': 'mojito-create',
     'help': './commands/help',
     'info': './commands/version',
     'version': './commands/version'
-};
-
-bundled = {
-    'create': 'mojito-create'
 };
 
 module.exports = main;
