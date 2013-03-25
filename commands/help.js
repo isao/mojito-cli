@@ -14,8 +14,8 @@ function usage(binname, pkgname) {
     log.info('The %s package provides command line helpers for mojito developers.', pkgname);
 }
 
-function help(meta, cb) {
-    var basic = Object.keys(options).concat(Object.keys(bundled)),
+function help(args, opts, meta, cb) {
+    var basic = meta.cli.commands,
         every = meta.mojito ? basic.concat(meta.mojito.commands) : basic;
 
     usage(meta.cli.binname, meta.cli.name);
@@ -28,7 +28,5 @@ function help(meta, cb) {
     }
 }
 
-module.exports = {
-    run: help,
-	usage: usage
-}
+module.exports = help;
+module.exports.usage = usage;

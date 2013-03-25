@@ -6,7 +6,8 @@
 /*jshint node:true */
 'use strict';
 
-var log = require('./lib/log'),
+var resolve = require('path').resolve,
+    log = require('./lib/log'),
     nopt = require('nopt'),
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
@@ -14,8 +15,6 @@ var log = require('./lib/log'),
 
     getmoj = require('./lib/mojmeta'),
     getapp = require('./lib/appmeta'),
-    handoff = require('./lib/handoff'),
-
     builtin, // function map
     bundled; // package name map
 
@@ -24,13 +23,14 @@ function getmeta(cwd) {
     var app,
         mojito,
         cli = require('./package'),
-        meta = module.exports.meta;
+        meta = {};
 
     log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
     meta.cli = {
         name: cli.name,
         binname: Object.keys(cli.bin)[0],
-        version: cli.version
+        version: cli.version,
+        commands: Object.keys(builtin).concat(Object.keys(bundled)).sort()
     };
 
     meta.app = getapp(cwd);
@@ -38,7 +38,6 @@ function getmeta(cwd) {
     if (meta.app) {
         meta.mojito = getmoj(cwd);
     }
-
     return meta;
 }
 
@@ -55,10 +54,39 @@ function altcmd(opts) {
     return cmd;
 }
 
+function load(pathname) {
+    var mod;
+    try {
+        mod = require(pathname);
+    } catch(err) {}
+    return mod;
+}
+
+function exec(cmd, args, opts, meta, cb) {
+    var mod;
+
+    if (('help' === cmd) && opts.argv.remain.length) {
+
+
+    } else if (builtin.hasOwnProperty(cmd)) {
+        log.debug('runnning local command %s', builtin[cmd]);
+        mod = load(builtin[cmd]);
+        mod(args, opts, meta, cb);
+
+    } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
+        log.debug('runnning legacy mojito command %s', cmd);
+        mod = load(resolve(meta.mojito.commands.path, cmd));
+        mod.run(args, opts, cb);
+
+    } else {
+        log.error('Unable to execute command %s', cmd);
+    }
+}
+
 function main(argv, cwd, cb) {
     var opts = nopt(options, aliases, argv, 0),
-        cmd = (opts.argv.remain.shift() || '').toLowerCase(),
-        meta;
+        args = opts.argv.remain,
+        cmd = (args.shift() || '').toLowerCase();
 
     if (opts.debug) {
         log.level = 'debug';
@@ -70,33 +98,14 @@ function main(argv, cwd, cb) {
     }
 
     log.debug('cmd: %s, opts: %j', cmd, opts);
-
-    // collect some metadata from available package.json files
-    meta = getmeta(cwd);
-
-    // do cmd
-    if ('help' === cmd) {
-        
-
-    } else if (builtin.hasOwnProperty(cmd)) {
-        log.debug('runnning local function');
-        handoff(builtin[cmd], meta, opts, cb);
-
-    } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
-        handoff.legacy(cmd, meta, opts, cb);
-
-    } else {
-        log.error('Unable to execute command %s', cmd);
-        help(meta, cb);
-    }
-
+    exec(cmd, args, opts, getmeta(cwd), cb);
     return cmd;
 }
 
 builtin = {
-    'help': '../comamnds/help',
-    'info': '../commands/version',
-    'version': '../commands/version'
+    'help': './commands/help',
+    'info': './commands/version',
+    'version': './commands/version'
 };
 
 bundled = {
@@ -105,8 +114,4 @@ bundled = {
 
 module.exports = main;
 module.exports.log = log;
-module.exports.meta = {
-    cli: null,
-    app: null,
-    mojito: null
-};
+module.exports.getmeta = getmeta;

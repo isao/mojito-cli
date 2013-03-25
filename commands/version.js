@@ -9,7 +9,7 @@
 var log = require('../lib/log');
 
 
-function version(meta, opts, cb) {
+function version(args, opts, meta, cb) {
     var appdeps = meta.app && meta.app.dependencies;
 
     log.info('%s v%s', meta.cli.name, meta.cli.version);
