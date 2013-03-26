@@ -63,19 +63,17 @@ function load(pathname) {
 }
 
 function exec(cmd, args, opts, meta, cb) {
-    var mod;
+    var mod,
+        mojito_cmds = meta.mojito && meta.mojito.commands;
 
-    if (('help' === cmd) && opts.argv.remain.length) {
-
-
-    } else if (bundled.hasOwnProperty(cmd)) {
-        log.debug('runnning local command %s', bundled[cmd]);
+    if (bundled.hasOwnProperty(cmd)) {
+        log.debug('runnning bundled command %s', bundled[cmd]);
         mod = load(bundled[cmd]);
         mod(args, opts, meta, cb);
 
-    } else if (meta.mojito && meta.mojito.commands.indexOf(cmd)) {
+    } else if (mojito_cmds && mojito_cmds.indexOf(cmd)) {
         log.debug('runnning legacy mojito command %s', cmd);
-        mod = load(resolve(meta.mojito.commands.path, cmd));
+        mod = load(resolve(mojito_cmds.path, cmd));
         mod.run(args, opts, cb);
 
     } else {
@@ -111,4 +109,5 @@ bundled = {
 
 module.exports = main;
 module.exports.log = log;
+module.exports.load = load;
 module.exports.getmeta = getmeta;
