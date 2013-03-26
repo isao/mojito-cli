@@ -16,6 +16,10 @@
     "istanbul": "~0.1.32",
     "tape": "~0.3.2"
   },
+  "engines": {
+      "node": ">0.6",
+      "npm": ">1.1"
+  },
   "scripts": {
     "preinstall": "./preinstall.sh",
     "test": "tape tests/*.js | tee results.tap",
