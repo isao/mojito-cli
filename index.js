@@ -56,7 +56,9 @@ function load(pathname) {
     var mod;
     try {
         mod = require(pathname);
-    } catch(err) {}
+    } catch(err) {
+        log.debug('unable to require %s', pathname);
+    }
     return mod;
 }
 
