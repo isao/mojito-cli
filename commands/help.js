@@ -26,6 +26,8 @@ function help(args, opts, meta, cb) {
             'directory that has\nmojito installed.'
         );
     }
+
+    cb(null, 'ok');
 }
 
 module.exports = help;
