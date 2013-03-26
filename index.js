@@ -103,7 +103,7 @@ function main(argv, cwd, cb) {
 bundled = {
     'create': 'mojito-create',
     'help': './commands/help',
-    'info': './commands/version',
+    'info': './commands/info',
     'version': './commands/version'
 };
 
