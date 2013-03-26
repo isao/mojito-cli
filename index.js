@@ -28,7 +28,7 @@ function getmeta(cwd) {
         name: cli.name,
         binname: Object.keys(cli.bin)[0],
         version: cli.version,
-        commands: Object.keys(bundled).sort()
+        commands: Object.keys(bundled)
     };
 
     meta.app = getapp(cwd);
