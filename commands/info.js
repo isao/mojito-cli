@@ -42,3 +42,5 @@ function main(args, opts, meta, cb) {
 }
 
 module.exports = main;
+
+module.exports.usage = 'Usage: mojito info\nDisplay information about your app and mojito.';

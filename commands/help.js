@@ -35,11 +35,14 @@ function main(args, opts, meta, cb) {
     var cmd = args[0],
         mojito_cmds = meta.mojito && meta.mojito.commands;
 
-    if (!cmd) {
+    if (!cmd || ('help' === cmd)) {
         help(meta);
         cb();
 
-    } else if(mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
+    } else if (meta.cli.commands.indexOf(cmd) > -1) {
+        cb(null, load('./commands/' + cmd).usage);
+
+    } else if (mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
         cb(null, load(resolve(mojito_cmds.path, cmd)).usage);
 
     } else {

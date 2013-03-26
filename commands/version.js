@@ -15,3 +15,5 @@ function version(args, opts, meta, cb) {
 }
 
 module.exports = version;
+
+module.exports.usage = 'Usage: mojito version\nDisplay the version of mojito-cli.';
