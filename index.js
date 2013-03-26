@@ -18,9 +18,7 @@ var resolve = require('path').resolve,
 
 
 function getmeta(cwd) {
-    var app,
-        mojito,
-        cli = require('./package'),
+    var cli = require('./package'),
         meta = {};
 
     log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
