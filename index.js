@@ -13,7 +13,7 @@ var resolve = require('path').resolve,
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
     getmoj = require('./lib/mojmeta'),
-    getapp = require('./lib/appmeta'),
+    getapp = require('./lib/readpkg'),
     bundled; // package name map
 
 
