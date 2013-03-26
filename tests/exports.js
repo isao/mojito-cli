@@ -1,11 +1,8 @@
-exports['index exports'] = function (t) {
-    var module = require('../');
-    t.deepEqual(Object.keys(module), ['run','log','name','version']);
-    t.done();
-};
+var test = require('tape');
 
-exports['passthru exports'] = function (t) {
-    var module = require('../passthru');
-    t.deepEqual(Object.keys(module), ['run','isMojitoApp', 'setpath']);
-    t.done();
-};
+
+test('index exports', function (t) {
+    var module = require('../');
+    t.same(Object.keys(module), ['log', 'getmeta']);
+    t.end();
+});
