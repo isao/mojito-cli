@@ -12,8 +12,8 @@ var resolve = require('path').resolve,
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
-    getmoj = require('./lib/mojmeta'),
     getapp = require('./lib/readpkg'),
+    getmoj = require('./lib/readpkg-mojito'),
     bundled; // package name map
 
 
