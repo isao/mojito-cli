@@ -12,8 +12,7 @@ var resolve = require('path').resolve,
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
-    getapp = require('./lib/readpkg'),
-    getmoj = require('./lib/readpkg-mojito'),
+    readpkg = require('./lib/readpkg'),
     bundled; // package name map
 
 
@@ -29,9 +28,9 @@ function getmeta(cwd) {
         commands: Object.keys(bundled)
     };
 
-    meta.app = getapp(cwd);
+    meta.app = readpkg(cwd);
     if (meta.app) {
-        meta.mojito = getmoj(cwd);
+        meta.mojito = readpkg.mojito(cwd);
     }
     return meta;
 }
