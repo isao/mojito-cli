@@ -5,6 +5,7 @@
   "bin": {
     "mojito": "bin/mojito"
   },
+  "main": "index.js",
   "preferGlobal": true,
   "dependencies": {
     "mojito-create": "git://github.com/isao/mojito-create.git",

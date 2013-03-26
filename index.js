@@ -30,7 +30,6 @@ function getmeta(cwd) {
     };
 
     meta.app = getapp(cwd);
-
     if (meta.app) {
         meta.mojito = getmoj(cwd);
     }
@@ -65,7 +64,7 @@ function exec(cmd, args, opts, meta, cb) {
         mojito_cmds = meta.mojito && meta.mojito.commands;
 
     if (bundled.hasOwnProperty(cmd)) {
-        log.debug('runnning bundled command %s', bundled[cmd]);
+        log.debug('runnning bundled command %s', cmd);
         mod = load(bundled[cmd]);
         mod(args, opts, meta, cb);
 
