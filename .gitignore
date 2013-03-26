@@ -1,4 +1,4 @@
 /artifacts
 /node_modules
-/tests/results.tap
+/results.tap
 !/node_modules/mojito-create
