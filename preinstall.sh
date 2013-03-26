@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo 'mojito-cli: Preparing to install package "mojito-cli".'
-npm=$(which npm ynpm | grep ^/ | head -1)
+npm=$(which npm ynpm 2>&1 | grep ^/ | head -1)
 global_lib=$($npm prefix -g)/lib/node_modules
 
 if [[ -d $global_lib/mojito ]]
