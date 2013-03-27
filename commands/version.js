@@ -6,14 +6,60 @@
 /*jshint node:true */
 'use strict';
 
-var log = require('../lib/log');
+var join = require('path').join,
+    log = require('../lib/log'),
+    readpkg = require('../lib/readpkg');
 
 
-function version(args, opts, meta, cb) {
-    log.info('%s v%s', meta.cli.name, meta.cli.version);
-    cb(null, 'ok');
+function error(msg) {
+    log.error(msg);
+    log.info(module.exports.usage);
 }
 
-module.exports = version;
+function version(meta, msg) {
+    if (meta && meta.name) {
+        log.info('%s v%s', meta.name, meta.version, msg || '');
+    } else {
+        error('Missing package.json.');
+    }
+}
 
-module.exports.usage = 'Usage: mojito version\nDisplay the version of mojito-cli.';
+function mojitVersion(name) {
+    if (name) {
+        version(readpkg(join('./mojits', name)));
+    } else {
+        error('Please specify a mojit name.');
+    }
+}
+
+function main(args, opts, meta, cb) {
+    var type = args.shift();
+
+    switch (type) {
+    case undefined:
+        version(meta.cli);
+        break;
+    case 'app':
+    case 'application':
+        version(meta.app);
+        if (meta.mojito) {
+            version(meta.mojito, '(installed locally)');
+        }
+        break;
+    case 'mojit':
+        mojitVersion(args.shift());
+        break;
+    default:
+        error('Unrecognized parameter: ' + type);
+    }
+
+    cb();
+}
+
+module.exports = main;
+
+module.exports.usage = [
+    'Usage: mojito version [app] [mojit <mojitname>]',
+    'Display the version of the mojito-cli, current app, or specified mojit.',
+    'Version of application or mojit depend on package.json in current directory.'
+].join('\n');

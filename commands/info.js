@@ -26,7 +26,7 @@ function appinfo(meta) {
     }
 
     if (meta.mojito) {
-        log.info('locally installed %s v%s', meta.mojito.name, meta.mojito.version);
+        log.info('%s v%s (installed locally)', meta.mojito.name, meta.mojito.version);
     }
 }
 
