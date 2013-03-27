@@ -10,10 +10,10 @@ var cli = require('../'),
 
 function done(err, msg) {
     if(err) {
-    	log.error(err instanceof Error ? err.message : err);
-    	//todo put stack trace, orig error string in log file?
+        log.error(err instanceof Error ? err.message : err);
+        //todo put stack trace, orig error string in log file?
     } else if(msg) {
-    	log.info(msg);
+        log.info(msg);
     }
 }
 
