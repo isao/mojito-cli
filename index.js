@@ -23,6 +23,7 @@ function getmeta(cwd) {
     log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
     meta.cli = {
         name: cli.name,
+        description: cli.description,
         binname: Object.keys(cli.bin)[0],
         version: cli.version,
         commands: Object.keys(bundled)
