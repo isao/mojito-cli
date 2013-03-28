@@ -4,7 +4,7 @@ echo 'mojito-cli: Preparing to install package "mojito-cli".'
 npm=$(which npm ynpm 2>&1 | grep ^/ | head -1)
 global_lib=$($npm prefix -g)/lib/node_modules
 
-if [[ -d $global_lib/mojito ]]
+if [ -d $global_lib/mojito ]
 then
     cat <<FOO >&2
 mojito-cli: A prior global installation of package "mojito" was found.
