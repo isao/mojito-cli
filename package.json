@@ -17,7 +17,7 @@
     "tape": "~0.3.2"
   },
   "engines": {
-      "node": ">0.6",
+      "node": ">0.8",
       "npm": ">1.1"
   },
   "scripts": {
@@ -27,6 +27,7 @@
     "plato": "plato -d artifacts/plato {.,lib}/*.js"
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",
+  "bugs": "https://github.com/yahoo/mojito-cli/issues",
   "author": "Isao Yagi <isao@yahoo-inc.com>",
   "license": "BSD",
   "readmeFilename": "README.md"

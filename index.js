@@ -13,7 +13,7 @@ var resolve = require('path').resolve,
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
     readpkg = require('./lib/readpkg'),
-    bundled; // package name map
+    bundled; // map of package name:require-string
 
 
 function getmeta(cwd) {

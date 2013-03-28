@@ -45,7 +45,16 @@ To show top-level help for this command line tool:
 
 To show help for a specific command:
 
-    $ mojito help <command>
+    % mojito help <command>
+
+### version
+
+
+### info
+
+### [create](http://github.com/yahoo/mojito-create)
+
+    % mojito create <type> <subtype> <name>
 
 
 
