@@ -49,8 +49,19 @@ To show help for a specific command:
 
 ### version
 
+To show the version for `mojito-cli`:
 
-### info
+    % mojito version
+
+To show the version for an application, run the following from the application directory:
+
+    % mojito version app
+
+The version of the mojito runtime installed locally to your app will be displayed as well.
+
+To show the version for a mojit, run the following from the application directory:
+
+    % mojito version mojit <mojit-name>
 
 ### [create](http://github.com/yahoo/mojito-create)
 
