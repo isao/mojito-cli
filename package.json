@@ -1,6 +1,6 @@
 {
   "name": "mojito-cli",
-  "version": "0.0.0PR1",
+  "version": "0.0.0PR2",
   "description": "command line utilities for mojito",
   "bin": {
     "mojito": "bin/mojito"
