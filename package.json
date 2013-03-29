@@ -5,24 +5,30 @@
   "bin": {
     "mojito": "bin/mojito"
   },
+  "main": "index.js",
   "preferGlobal": true,
   "dependencies": {
     "mojito-create": "git://github.com/isao/mojito-create.git",
     "npmlog": "0.0.2",
-    "optimist": "~0.3.5"
+    "nopt": "~2.1.1"
   },
   "devDependencies": {
     "istanbul": "~0.1.32",
-    "nodeunit": "~0.7.4"
+    "tape": "~0.3.2"
+  },
+  "engines": {
+      "node": ">0.8",
+      "npm": ">1.1"
   },
   "scripts": {
     "preinstall": "./preinstall.sh",
-    "test": "nodeunit --reporter junit --output artifacts tests",
+    "test": "tape tests/*.js | tee results.tap",
     "cover": "istanbul cover --dir artifacts/coverage -- node_modules/nodeunit/bin/nodeunit --reporter `pwd`/node_modules/nodeunit/lib/reporters/junit.js --output artifacts tests",
-    "plato": "plato -d artifacts/plato *.js"
+    "plato": "plato -d artifacts/plato {.,lib}/*.js"
   },
-  "repository": "git://github.com/isao/mojito-cli.git",
+  "repository": "git://github.com/yahoo/mojito-cli.git",
+  "bugs": "https://github.com/yahoo/mojito-cli/issues",
   "author": "Isao Yagi <isao@yahoo-inc.com>",
-  "license": "MIT",
+  "license": "BSD",
   "readmeFilename": "README.md"
 }

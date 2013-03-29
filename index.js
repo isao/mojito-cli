@@ -1,69 +1,110 @@
-/**
- * Copyright (c) 2013 Yahoo! Inc.  All rights reserved.
- * Copyrights licensed under the MIT License.
+/*
+ * Copyright (c) 2011-2013, Yahoo! Inc.  All rights reserved.
+ * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 /*jshint node:true */
 'use strict';
 
-var optimist = require('optimist'),
-    log = require('./log'),
-    pass = require('./passthru'),
-    info = require('./package.json'),
-    builtin;
+var resolve = require('path').resolve,
+    log = require('./lib/log'),
+    nopt = require('nopt'),
+
+    options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
+    aliases = {h: '--help', v: '--version', d: '--debug'},
+    readpkg = require('./lib/readpkg'),
+    bundled; // map of package name:require-string
 
 
-function main(argv, cb) {
-    var opts = optimist.parse(argv),
-        args = opts._, // args without "-" or "--" prefixes, or after bare "--"
-        cmd = args.shift();
+function getmeta(cwd) {
+    var cli = require('./package'),
+        meta = {};
 
-    // commands inferred from options
-    if(!cmd) {
-        if(opts.version) {
-            cmd = 'version';
-        } else if(opts.help) {
-            cmd = 'help';
-        } else {
-            log.error('Missing command parameter.');
-            cmd = 'help';
-        }
+    log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
+    meta.cli = {
+        name: cli.name,
+        description: cli.description,
+        binname: Object.keys(cli.bin)[0],
+        version: cli.version,
+        commands: Object.keys(bundled)
+    };
+
+    meta.app = readpkg(cwd);
+    if (meta.app) {
+        meta.mojito = readpkg.mojito(cwd);
     }
+    return meta;
+}
 
-    // dispatch the command
-    if(builtin.hasOwnProperty(cmd)) {
-        if('string' === typeof builtin[cmd]) {
-            require(builtin[cmd]).run(args, opts, cb);
-        } else {
-            builtin[cmd](args, opts, cb);
-        }
+function altcmd(opts) {
+    var cmd;
+    if (opts.version) {
+        cmd = 'version';
+    } else if (opts.help) {
+        cmd = 'help';
     } else {
-        pass.run(cmd, args, opts, cb);
+        log.error('No command...');
+        cmd = 'help';
     }
-
     return cmd;
 }
 
-function help(args, opts, cb) {
-    cb(null, [
-        'Usage: ', Object.keys(info.bin)[0], ' <command> [options]\n',
-        'Commands: help, version, create' // FIXME
-    ].join(''));
+function load(pathname) {
+    var mod;
+    try {
+        mod = require(pathname);
+    } catch(err) {
+        log.debug('unable to require %s', pathname);
+    }
+    return mod;
 }
 
-function version(args, opts, cb) {
-    cb(null, info.name + ' v' + info.version);
+function exec(cmd, args, opts, meta, cb) {
+    var mod,
+        mojito_cmds = meta.mojito && meta.mojito.commands;
+
+    if (bundled.hasOwnProperty(cmd)) {
+        log.debug('runnning bundled command %s', cmd);
+        mod = load(bundled[cmd]);
+        mod(args, opts, meta, cb);
+
+    } else if (mojito_cmds && mojito_cmds.indexOf(cmd)) {
+        log.debug('runnning legacy mojito command %s', cmd);
+        mod = load(resolve(mojito_cmds.path, cmd));
+        mod.run(args, opts, cb);
+
+    } else {
+        log.error('Unable to execute command %s', cmd);
+    }
 }
 
-builtin = {
+function main(argv, cwd, cb) {
+    var opts = nopt(options, aliases, argv, 0),
+        args = opts.argv.remain,
+        cmd = (args.shift() || '').toLowerCase();
+
+    if (opts.debug) {
+        log.level = 'debug';
+    }
+
+    // treat lone --help and --version flags like commands
+    if (!cmd) {
+        cmd = altcmd(opts);
+    }
+
+    log.debug('cmd: %s, opts: %j', cmd, opts);
+    exec(cmd, args, opts, getmeta(cwd), cb);
+    return cmd;
+}
+
+bundled = {
     'create': 'mojito-create',
-    'help': help,
-    'version': version
+    'help': './commands/help',
+    'info': './commands/info',
+    'version': './commands/version'
 };
 
-module.exports = {
-    run: main,
-    log: log,
-    name: info.name,
-    version: info.version
-};
+module.exports = main;
+module.exports.log = log;
+module.exports.load = load;
+module.exports.getmeta = getmeta;
