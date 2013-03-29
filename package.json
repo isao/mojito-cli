@@ -8,7 +8,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-create": "git://github.com/isao/mojito-create.git",
+    "mojito-create": "*",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
   },
