@@ -79,7 +79,7 @@ function exec(cmd, args, opts, meta, cb) {
 }
 
 function main(argv, cwd, cb) {
-    var opts = nopt(options, aliases, argv, 0),
+    var opts = nopt(options, aliases, argv || [], 0),
         args = opts.argv.remain,
         cmd = (args.shift() || '').toLowerCase();
 
