@@ -40,7 +40,7 @@ function main(args, opts, meta, cb) {
         cb();
 
     } else if (meta.cli.commands.indexOf(cmd) > -1) {
-        cb(null, load('./commands/' + cmd).usage);
+        cb(null, load(null, cmd).usage);
 
     } else if (mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
         cb(null, load(resolve(mojito_cmds.path, cmd)).usage);

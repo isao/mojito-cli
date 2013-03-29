@@ -49,12 +49,12 @@ function altcmd(opts) {
     return cmd;
 }
 
-function load(pathname) {
+function load(str, cmd) {
     var mod;
     try {
-        mod = require(pathname);
+        mod = require(str || bundled[cmd]);
     } catch(err) {
-        log.debug('unable to require %s', pathname);
+        log.debug('unable to require %s', str || bundled[cmd]);
     }
     return mod;
 }
