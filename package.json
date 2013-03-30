@@ -21,7 +21,7 @@
     "npm": ">1.1"
   },
   "scripts": {
-    "preinstall": "./preinstall.sh",
+    "preinstall": "scripts/preinstall.sh",
     "test": "node tests | tee results.tap",
     "cover": "istanbul cover --dir artifacts/coverage -- tests",
     "plato": "plato -d artifacts/plato {.,lib}/*.js"
