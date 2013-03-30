@@ -22,8 +22,16 @@ function noCb(t) {
     }
 }
 
+test('index exports', function (t) {
+    var module = require('../');
+    t.equal('function', typeof module);
+    t.same(Object.keys(module), ['log', 'load', 'getmeta']);
+    t.end();
+});
+
 test('mojito (no subcmd)', function(t) {
     t.plan(7);
+    reset();
 
     function cb2(m) {
         t.equal(m.message, 'No command...', 'err msg emitted');
@@ -63,27 +71,22 @@ test('mojito help (app cwd)', function(t) {
     t.equals(cli(['help', 'jslint'], cwd, cb), 'help');
 });
 
-//     t.equals(cli(['--help'], '.', cb), 'help');
-//     t.equals(cli(['help'], '.', cb), 'help');
-//     t.equals(cli(['--foo', 'help'], '.', cb), 'help');
-// 
-// test('version', function(t) {
-//     t.plan(6);
-// 
-//     function cb(err, msg) {
-//         t.equals(err, null);
-//         t.ok(msg.match(/^mojito-cli v(\d+\.){2}.+/));
-//     }
-// 
-//     t.equals(cli.run(['version'], cb), 'version');
-//     t.equals(cli.run(['--version'], cb), 'version');
-// });
-// 
+test('mojito version', function(t) {
+    t.plan(2);
+
+    function cb(err, msg) {
+        t.equals(err, undefined);
+    }
+
+    t.equals(cli(['version'], null, cb), 'version');
+    //t.equals(cli(['--version'], null, cb), 'version');
+});
+
 // test('fixme --version not treated as a bool flag', function(t) {
 //     // unexpected result since --version is not declared bool
 //     // { _: [], version: 'help' }
 //     // address after hooking up runner, cmd, user and app configs
-//     t.equals(cli.run(['--version', 'help'], noop), 'version');
+//     t.equals(cli(['--version', 'help'], '', noop), 'version');
 //     t.end();
 // });
 // 

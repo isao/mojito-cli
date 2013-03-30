@@ -1,3 +1,4 @@
-require('./main');
 require('./logtest');
-require('./exports');
+require('./readpkg');
+require('./help');
+require('./main');

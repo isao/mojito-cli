@@ -52,6 +52,7 @@ function altcmd(opts) {
 function load(str, cmd) {
     var mod;
     try {
+        // require module by pathname, or by bundled command name
         mod = require(str || bundled[cmd]);
     } catch(err) {
         log.debug('unable to require %s', str || bundled[cmd]);
