@@ -1,89 +1,107 @@
-var cli = require('../'),
-    appdir = require('path').resolve(__dirname, 'fixtures/someapp');
+var test = require('tap').test,
+    cli = require('../');
 
 
-cli.log.pause();// don't output anything
+// buffer log msgs instead of outputing them
+cli.log.pause();
+
+function reset(t) {
+    if(t) {
+        t.same(cli.log.record, cli.log._buffer, 'records & buffer are same');
+        t.ok(cli.log.record.length, 'have records buffered');
+    }
+    cli.log.record = cli.log._buffer = [];
+}
 
 function noop() {
 }
 
-exports['missing command'] = function(t) {
-    t.expect(4);
+function noCb(t) {
+    return function (err, msg) {
+        t.ok((err === undefined) && (msg === undefined), 'no cb params');
+    }
+}
 
-    cli.log.once('log.error', function(m) {
-        t.equal(m.prefix, 'Missing command parameter.', 'err msg is wrong');
+test('index exports', function (t) {
+    var module = require('../');
+    t.equal('function', typeof module);
+    t.same(Object.keys(module), ['log', 'load', 'getmeta']);
+    t.end();
+});
+
+test('mojito (no subcmd)', function(t) {
+    t.plan(7);
+    reset();
+
+    function cb2(m) {
+        t.equal(m.message, 'No command...', 'err msg emitted');
         process.nextTick(function() {
-            t.deepEqual(m, cli.log.record.pop(), 'err msg obj is same');
-            t.equal(0, cli.log.record.length, 'log stack empty');
-            t.done();
+            t.equal(cli.log.record[0], m, 'err msg obj is 1st elem');
+            t.ok(cli.log.record.length > 1, 'plus some other msgs');
+            reset(t);
         });
+    }
+
+    cli.log.once('log.error', cb2);
+    t.equals(cli([], '', noCb(t)), 'help');
+});
+
+test('mojito help|--help|-h', function(t) {
+    t.plan(6)
+    t.equals(cli(['help'], '', noCb(t)), 'help');
+    t.equals(cli(['--help'], '', noCb(t)), 'help');
+    t.equals(cli(['-h'], '', noCb(t)), 'help');
+});
+
+test('mojito help (app cwd)', function(t) {
+    t.plan(3)
+
+    var cwd = __dirname + '/fixtures/someapp',
+        msgs = [];
+
+    cli.log.on('log.info', function (m) {
+        msgs.push(m.message);
     });
 
-    t.equal(cli.run([], noop), 'help');
-};
-
-exports['help'] = function(t) {
-    t.expect(8);
-
     function cb(err, msg) {
-        t.equals(err, null);
+        t.equal(err, null);
+        t.equal(msg, 'mock usage for mojito/lib/app/commands/jslint.js');
     }
 
-    t.equals(cli.run([], cb), 'help', 'missing command');
-    t.equals(cli.run(['--help'], cb), 'help');
-    t.equals(cli.run(['help'], cb), 'help');
-    t.equals(cli.run(['--foo', 'help'], cb), 'help');
-    t.done();
-};
+    t.equals(cli(['help', 'jslint'], cwd, cb), 'help');
+});
 
-exports['version'] = function(t) {
-    t.expect(6);
+test('mojito version', function(t) {
+    t.plan(2);
 
     function cb(err, msg) {
-        t.equals(err, null);
-        t.ok(msg.match(/^mojito-cli v(\d+\.){2}.+/));
+        t.equals(err, undefined);
     }
 
-    t.equals(cli.run(['version'], cb), 'version');
-    t.equals(cli.run(['--version'], cb), 'version');
-    t.done();
-};
+    t.equals(cli(['version'], null, cb), 'version');
+    //t.equals(cli(['--version'], null, cb), 'version');
+});
 
-exports['fixme --version not treated as a bool flag'] = function(t) {
-    // unexpected result since --version is not declared bool
-    // { _: [], version: 'help' }
-    // address after hooking up runner, cmd, user and app configs
-    t.equals(cli.run(['--version', 'help'], noop), 'version');
-    t.done();
-};
-
-
-exports['create'] = function(t) {
-    t.equals(cli.run(['create', 'app/simple'], noop), 'create');
-    t.done();
-};
-
-exports['nonesuch'] = function(t) {
-    t.expect(2);
-
-    var cwd = process.cwd(); //fixme
-    process.chdir(appdir);
-
-    function cb(err, msg) {
-        t.equals(msg, 'you want me to nonesuch?');
-        process.chdir(cwd);
-    }
-
-    t.equals(cli.run(['nonesuch', '--cwd', appdir], cb), 'nonesuch');
-    t.done();
-};
-
-exports['-cleanup-'] = function(t) {
-    //destroy accumulated log messages
-    t.ok(cli.log.record.length);
-    t.ok(cli.log._buffer.length);
-    cli.log.record = [];
-    cli.log._buffer = [];
-    cli.log.resume();
-    t.done();
-};
+// test('fixme --version not treated as a bool flag', function(t) {
+//     // unexpected result since --version is not declared bool
+//     // { _: [], version: 'help' }
+//     // address after hooking up runner, cmd, user and app configs
+//     t.equals(cli(['--version', 'help'], '', noop), 'version');
+//     t.end();
+// });
+// 
+// 
+// test('create', function(t) {
+//     t.equals(cli.run(['create', 'app/simple'], noop), 'create');
+//     t.end();
+// });
+// 
+// test('nonesuch', function(t) {
+//     t.plan(2);
+// 
+//     function cb(err, msg) {
+//         t.equals(err, 'unable to invoke command "nonesuch"');
+//     }
+// 
+//     t.equals(cli.run(['nonesuch'], cb), 'nonesuch');
+// });

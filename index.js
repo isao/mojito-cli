@@ -49,12 +49,13 @@ function altcmd(opts) {
     return cmd;
 }
 
-function load(pathname) {
+function load(str, cmd) {
     var mod;
     try {
-        mod = require(pathname);
+        // require module by pathname, or by bundled command name
+        mod = require(str || bundled[cmd]);
     } catch(err) {
-        log.debug('unable to require %s', pathname);
+        log.debug('unable to require %s', str || bundled[cmd]);
     }
     return mod;
 }
@@ -79,7 +80,7 @@ function exec(cmd, args, opts, meta, cb) {
 }
 
 function main(argv, cwd, cb) {
-    var opts = nopt(options, aliases, argv, 0),
+    var opts = nopt(options, aliases, argv || [], 0),
         args = opts.argv.remain,
         cmd = (args.shift() || '').toLowerCase();
 
