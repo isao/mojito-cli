@@ -71,15 +71,50 @@ test('mojito help (app cwd)', function(t) {
     t.equals(cli(['help', 'jslint'], cwd, cb), 'help');
 });
 
-test('mojito version', function(t) {
-    t.plan(2);
+test('mojito --version', function(t) {
+    t.plan(3);
 
     function cb(err, msg) {
         t.equals(err, undefined);
+        t.equals(msg, undefined);
+    }
+
+    t.equals(cli(['--version'], '', cb), 'version');
+});
+
+test('mojito version', function(t) {
+    t.plan(3);
+
+    function cb(err, msg) {
+        t.equals(err, undefined);
+        t.equals(msg, undefined);
     }
 
     t.equals(cli(['version'], '', cb), 'version');
     //t.equals(cli(['--version'], null, cb), 'version');
+});
+
+test('mojito version app|application', function(t) {
+    t.plan(6);
+
+    function cb(err, msg) {
+        t.equals(err, undefined);
+        t.equals(msg, undefined);
+    }
+
+    t.equals(cli(['version', 'app'], '', cb), 'version');
+    t.equals(cli(['version', 'application'], '', cb), 'version');
+});
+
+test('mojito version mojit', function(t) {
+    t.plan(3);
+
+    function cb(err, msg) {
+        t.equals(err, undefined);
+        t.equals(msg, undefined);
+    }
+
+    t.equals(cli(['version', 'mojit'], '', cb), 'version');
 });
 
 test('command takes priority over atl cmd flag', function(t) {
