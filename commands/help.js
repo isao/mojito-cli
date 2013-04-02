@@ -7,7 +7,6 @@
 'use strict';
 
 var resolve = require('path').resolve,
-    load = require('../').load,
     log = require('../lib/log');
 
 
@@ -40,10 +39,10 @@ function main(args, opts, meta, cb) {
         cb();
 
     } else if (meta.cli.commands.indexOf(cmd) > -1) {
-        cb(null, load(null, cmd).usage);
+        cb(null, module.exports.load(null, cmd).usage);
 
     } else if (mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
-        cb(null, load(resolve(mojito_cmds.path, cmd)).usage);
+        cb(null, module.exports.load(resolve(mojito_cmds.path, cmd)).usage);
 
     } else {
         help(meta);
@@ -54,3 +53,4 @@ function main(args, opts, meta, cb) {
 module.exports = main;
 module.exports.log = log;
 module.exports.usage = usage;
+module.exports.load = require('../').load;

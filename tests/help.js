@@ -1,6 +1,7 @@
 var test = require('tap').test,
     help = require('../commands/help'),
-    log = help.log;
+    log = help.log,
+    old_load = help.load;
 
 
 // buffer log msgs instead of outputing them
@@ -11,7 +12,7 @@ function getMeta() {
         cli: {
             name: 'mojito-cli',
             version: '1.2.3',
-            commands: ['create', 'help', 'info', 'version']
+            commands: ['create', 'help', 'info', 'version', 'make-it-rain']
         }
     };
 }
@@ -32,7 +33,7 @@ test('help simple', function(t) {
         t.equals(err, undefined);
         t.equals(log.record.shift().message, 'Usage: undefined <command> [options]');
         t.equals(log.record.shift().message, 'The mojito-cli package provides command line helpers for mojito developers.');
-        t.equals(log.record.shift().message, 'Available commands: create, help, info, version');
+        t.equals(log.record.shift().message, 'Available commands: create, help, info, version, make-it-rain');
         t.equals(log.record.shift().message, 'Additional commands are available from within an application directory that has\nmojito installed.');
         t.equals(log.record.length, 0);
         t.end();
@@ -40,4 +41,38 @@ test('help simple', function(t) {
 
     reset();
     help([], {}, getMeta(), cb);
+});
+
+test('help bundled command', function(t) {
+
+    t.plan(3);
+
+    function load(str, cmd) {
+    	t.equals(cmd, 'make-it-rain');
+    	help.load = old_load;
+    	return {
+    	    usage: cmd + ' does this and that' 
+    	};
+    }
+
+    function cb(err, msg) {
+        t.equals(err, null);
+        t.equals(msg, 'make-it-rain does this and that');
+    }
+
+    reset();
+    help.load = load;
+    help(['make-it-rain'], {}, getMeta(), cb);
+});
+
+test('help nonesuch', function(t) {
+    t.plan(2);
+
+    function cb(err, msg) {
+        t.equals(err, 'No help available for command nonesuch');
+        t.equals(msg, undefined);
+    }
+
+    reset();
+    help(['nonesuch'], {}, getMeta(), cb);
 });
