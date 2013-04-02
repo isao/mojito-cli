@@ -63,3 +63,5 @@ module.exports.usage = [
     'Display the version of the mojito-cli, current app, or specified mojit.',
     'Version of application or mojit depend on package.json in current directory.'
 ].join('\n');
+
+module.exports.log = log;

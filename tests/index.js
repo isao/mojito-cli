@@ -3,3 +3,4 @@ require('./readpkg');
 require('./help');
 require('./info');
 require('./main');
+require('./version');
