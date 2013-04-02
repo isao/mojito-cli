@@ -30,3 +30,13 @@ test('read someapp', function(t) {
     t.same(pkg.dependencies, actual.dependencies);
     t.end();
 });
+
+test('read incomplete', function(t) {
+    var actual = readpkg(fromhere('./fixtures/incomplete'));
+
+    t.same(actual.name, 'incomplete');
+    t.same(actual.version, '0.2.1');
+    t.same(actual.description, '(missing description)');
+    t.same(actual.dependencies, {});
+    t.end();
+});
