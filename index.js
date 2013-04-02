@@ -102,7 +102,8 @@ bundled = {
     'create': 'mojito-create',
     'help': './commands/help',
     'info': './commands/info',
-    'version': './commands/version'
+    'version': './commands/version',
+    'validate': './commands/validate'
 };
 
 module.exports = main;

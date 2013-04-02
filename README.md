@@ -63,6 +63,12 @@ To show the version for a mojit, run the following from the application director
 
     % mojito version mojit <mojit-name>
 
+### validate
+
+To validate the configuration files for a mojito application, run the following from the application directory:
+
+    % mojito validate
+
 ### [create](http://github.com/yahoo/mojito-create)
 
     % mojito create <type> <subtype> <name>

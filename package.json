@@ -10,7 +10,10 @@
   "dependencies": {
     "mojito-create": "*",
     "npmlog": "0.0.2",
-    "nopt": "~2.1.1"
+    "nopt": "~2.1.1",
+    "JSV": "~4.0.2",
+    "jsonlint": "~1.5.1",
+    "js-yaml": "~2.0.3"
   },
   "devDependencies": {
     "istanbul": "~0.1.32",

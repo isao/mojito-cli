@@ -30,3 +30,20 @@ test('read someapp', function(t) {
     t.same(pkg.dependencies, actual.dependencies);
     t.end();
 });
+
+test('read mojito', function(t) {
+    var actual = readpkg.mojito(fromhere('./fixtures/someapp')),
+        cmds = ['build', 'compile', 'create', 'docs', 'gv', 'help', 'info', 'jslint', 'profiler', 'start', 'test', 'version'],
+        schemas = [ {name: 'application', path: 'application.schema'},
+                    {name: 'default', path: 'default.schema'},
+                    {name: 'defaults', path: 'defaults.schema'},
+                    {name: 'definition', path: 'definition.schema'},
+                    {name: 'routes', path: 'routes.schema'} ];
+
+    cmds.path = resolve(fromhere('./fixtures/someapp'), 'node_modules/mojito/lib/app/commands');
+    schemas.path = resolve(fromhere('./fixtures/someapp'), 'node_modules/mojito/schemas');
+
+    t.same(actual.commands, cmds);
+    t.same(actual.schemas, schemas);
+    t.end();
+});
