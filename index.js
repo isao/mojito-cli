@@ -75,7 +75,7 @@ function exec(cmd, args, opts, meta, cb) {
         mod.run(args, opts, cb);
 
     } else {
-        log.error('Unable to execute command %s', cmd);
+        cb('Unable to invoke command ' + cmd);
     }
 }
 
