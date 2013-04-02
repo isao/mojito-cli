@@ -10,10 +10,12 @@ var log = require('../lib/log');
 
 
 function appinfo(meta) {
-    var appdeps = meta.app && meta.app.dependencies;
+    var appdeps = meta.app && meta.app.dependencies,
+        needs_mojito = appdeps && meta.app.dependencies.mojito;
 
-    if (meta.app && meta.app.name) {
-        log.info('%s v%s, %s', meta.app.name, meta.app.version, meta.app.description);
+    if (meta.app && meta.app.name && meta.app.version) {
+        log.info('%s v%s, %s', meta.app.name, meta.app.version,
+            meta.app.description || '(missing description)');
 
         if (meta.app.dependencies && meta.app.dependencies.mojito) {
             log.info('%s dependencies: %s', meta.app.name, Object.keys(appdeps).join(', '));
@@ -25,22 +27,24 @@ function appinfo(meta) {
         }
     }
 
-    if (meta.mojito) {
-        log.info('%s v%s (installed locally)', meta.mojito.name, meta.mojito.version);
+    if (needs_mojito) {
+        if (meta.mojito) {
+            log.info('%s v%s (installed locally).', meta.mojito.name, meta.mojito.version);
+        } else {
+            log.warn('Mojito is not installed locally. Install with:');
+            log.warn('    npm install mojito');
+            log.warn('');
+        }
     }
 }
 
-function envinfo() {
-    log.info('node %s/%s', process.version, process.platform);
-}
-
 function main(args, opts, meta, cb) {
-    appinfo(meta);
     log.info('%s v%s', meta.cli.name, meta.cli.version);
-    envinfo();
-    cb(null, 'ok');
+    log.info('node %s/%s', process.version, process.platform);
+    appinfo(meta);
+    cb();
 }
 
 module.exports = main;
-
+module.exports.log = log;
 module.exports.usage = 'Usage: mojito info\nDisplay information about your app and mojito.';

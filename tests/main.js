@@ -117,6 +117,17 @@ test('mojito version mojit', function(t) {
     t.equals(cli(['version', 'mojit'], '', cb), 'version');
 });
 
+test('mojito info', function(t) {
+    t.plan(3);
+
+    function cb(err, msg) {
+        t.equals(err, undefined);
+        t.equals(msg, undefined);
+    }
+
+    t.equals(cli(['info'], '', cb), 'info');
+});
+
 test('command takes priority over atl cmd flag', function(t) {
     t.equals(cli(['--version', 'help'], '', noop), 'help');
     t.end();
