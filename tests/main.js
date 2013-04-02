@@ -82,6 +82,36 @@ test('mojito version', function(t) {
     //t.equals(cli(['--version'], null, cb), 'version');
 });
 
+test('mojito validate (app cwd)', function(t) {
+    t.plan(3);
+    reset();
+
+    var cwd = __dirname + '/fixtures/someapp',
+        errors = [],
+        warns = [],
+        expectedWarnings = ["{ config: 'context[0] -> actionTimeout',\n  message: 'Instance is not a required type' }",
+                            "{ config: 'context[0] -> debugger',\n  message: 'Additional properties are not allowed' }",
+                            "{ config: 'context[0] -> search-advanced-page -> verbs[2]',\n  message: 'Instance is not one of the possible values: get,post,put,delete,GET,POST,PUT,DELETE' }"
+                           ];
+
+    cli.log.on('log.error', function (m) {
+        errors.push(m.message);
+    });
+
+    cli.log.on('log.warn', function (m) {
+        warns.push(m.message);
+    });
+
+    function cb(err, msg) {
+    }
+
+    t.equals(cli(['validate'], cwd, cb), 'validate');
+    setTimeout((function() {
+        t.equals(errors.length, 2);
+        t.same(warns, expectedWarnings);
+    }), 3000);
+});
+
 // test('fixme --version not treated as a bool flag', function(t) {
 //     // unexpected result since --version is not declared bool
 //     // { _: [], version: 'help' }
