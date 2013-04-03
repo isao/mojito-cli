@@ -22,7 +22,7 @@
   },
   "scripts": {
     "preinstall": "scripts/preinstall.sh",
-    "test": "node tests | tee results.tap",
+    "test": "node tests",
     "cover": "istanbul cover --dir artifacts/coverage -- tests",
     "plato": "plato -d artifacts/plato {.,lib}/*.js"
   },
