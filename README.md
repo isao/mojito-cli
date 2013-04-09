@@ -1,7 +1,9 @@
 mojito-cli [![Build Status](https://travis-ci.org/isao/mojito-cli.png)](https://travis-ci.org/isao/mojito-cli)
 ==========
 
-`mojito-cli` is a command line tool for [Mojito](https://github.com/yahoo/mojito) developers. `mojito` components that are unrelated to the core library and runtime will be moving to separate packages. For more information on the command line package changes, and the current status, see the [wiki](https://github.com/yahoo/mojito-cli/wiki).
+`mojito-cli` is a command line tool for [Mojito](https://github.com/yahoo/mojito) developers. `mojito` components that are unrelated to the core library and runtime will be moving to separate packages. 
+
+_* * * More information on the command line package changes, and the current status [here](https://github.com/yahoo/mojito-cli/wiki). * * *_
 
 Install mojito-cli
 ------------------
