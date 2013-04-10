@@ -24,7 +24,7 @@
     "preinstall": "scripts/preinstall.sh",
     "test": "node tests",
     "cover": "istanbul cover --dir artifacts/coverage -- tests",
-    "plato": "plato -d artifacts/plato {.,lib}/*.js"
+    "bumppatch": "npm version patch -m \"tag v%s (based on $(git describe))\""
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",
   "bugs": "https://github.com/yahoo/mojito-cli/issues",
