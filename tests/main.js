@@ -23,7 +23,7 @@ function noCb(t) {
 test('index exports', function (t) {
     var module = require('../');
     t.equal('function', typeof module);
-    t.same(Object.keys(module), ['log', 'load', 'getmeta']);
+    t.same(Object.keys(module), ['log', 'load']);
     t.end();
 });
 

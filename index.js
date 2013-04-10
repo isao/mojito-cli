@@ -49,7 +49,7 @@ function altcmd(opts) {
     return cmd;
 }
 
-function load(str, cmd) {
+function loadModule(str, cmd) {
     var mod;
     try {
         // require module by pathname, or by bundled command name
@@ -60,18 +60,35 @@ function load(str, cmd) {
     return mod;
 }
 
-function exec(cmd, args, opts, meta, cb) {
-    var mod,
-        mojito_cmds = meta.mojito && meta.mojito.commands;
+/**
+ * @param {string} sub-command, like 'help', 'create', etc.
+ * @param {object} cli, app, and mojito, metadata
+ * @return {object|function} module loaded via `require`
+ */
+function getModule(cmd, meta) {
+    var mod = false,
+        mo_cmd_list = meta.mojito && meta.mojito.commands,
+        mo_cmd_path = mo_cmd_list && meta.mojito.commandsPath;
 
     if (bundled.hasOwnProperty(cmd)) {
-        log.debug('runnning bundled command %s', cmd);
-        mod = load(bundled[cmd]);
+        mod = loadModule(bundled[cmd]);
+
+    } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
+        mod = loadModule(resolve(mo_cmd_path, cmd));
+    }
+
+    return mod;
+}
+
+function exec(cmd, args, opts, meta, cb) {
+    var mod = getModule(cmd, meta);
+
+    if ('function' === typeof mod) {
+        log.debug('getting bundled command %s', cmd);
         mod(args, opts, meta, cb);
 
-    } else if (mojito_cmds && mojito_cmds.indexOf(cmd)) {
+    } else if (('object' === typeof mod) && ('run' in mod)) {
         log.debug('runnning legacy mojito command %s', cmd);
-        mod = load(resolve(meta.mojito.commandsPath, cmd));
         mod.run(args, opts, cb);
 
     } else {
@@ -95,6 +112,7 @@ function main(argv, cwd, cb) {
 
     log.debug('cmd: %s, opts: %j', cmd, opts);
     exec(cmd, args, opts, getmeta(cwd), cb);
+
     return cmd;
 }
 
@@ -107,5 +125,4 @@ bundled = {
 
 module.exports = main;
 module.exports.log = log;
-module.exports.load = load;
-module.exports.getmeta = getmeta;
+module.exports.load = loadModule;
