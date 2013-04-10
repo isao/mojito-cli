@@ -32,6 +32,11 @@ function getmeta(cwd) {
         app = !isme && readpkg(cwd),
         mojito = app && readpkg.mojito(cwd);
 
+    // convenience flag for when we have a mojito app but no mojito installed
+    if (app) {
+        app.needsMojito = app.dependencies.mojito && !mojito;
+    }
+
     // save list of bundled commands for help
     cli.commands = Object.keys(bundled);
 
