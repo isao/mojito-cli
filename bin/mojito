@@ -5,7 +5,7 @@
  * See the accompanying LICENSE file for terms.
  */
 var cli = require('../'),
-    log = cli.log;
+    log = require('../lib/log');
 
 
 function done(err, msg) {
