@@ -14,23 +14,41 @@ test('readpkg exports', function (t) {
 });
 
 test('read someapp', function(t) {
-    var pkg = require('./fixtures/someapp/package'),
+    var pkg = require('./fixtures/someapp/package.json'),
         actual = readpkg(fromhere('./fixtures/someapp'));
-    
+
     t.notSame(pkg, actual);
-    t.same(pkg.name, actual.name);
-    t.same(pkg.version, actual.version);
-    t.same(pkg.description, actual.description);
+    t.equal(pkg.name, actual.name);
+    t.equal(pkg.version, actual.version);
+    t.equal(pkg.description, actual.description);
     t.same(pkg.dependencies, actual.dependencies);
+    t.end();
+});
+
+test('read someapp’s mojito', function(t) {
+    var pkg = require('./fixtures/someapp/node_modules/mojito/package.json'),
+        actual = readpkg.mojito(fromhere('./fixtures/someapp')),
+
+        cmds = ['build', 'compile', 'create', 'docs', 'gv', 'help', 'info', 'jslint', 'profiler', 'start', 'test', 'version'];
+
+    t.notSame(pkg, actual);
+    t.equal(pkg.name, actual.name);
+    t.equal(pkg.version, actual.version);
+    t.equal(pkg.description, actual.description);
+    t.same(pkg.dependencies, actual.dependencies);
+
+    // extra props for mojito
+    t.equal(actual.commandsPath, fromhere('./fixtures/someapp/node_modules/mojito/lib/app/commands'));
+    t.same(actual.commands, cmds);
     t.end();
 });
 
 test('read incomplete', function(t) {
     var actual = readpkg(fromhere('./fixtures/incomplete'));
 
-    t.same(actual.name, 'incomplete');
-    t.same(actual.version, '0.2.1');
-    t.same(actual.description, '(missing description)');
+    t.equal(actual.name, 'incomplete');
+    t.equal(actual.version, '0.2.1');
+    t.equal(actual.description, '(missing description)');
     t.same(actual.dependencies, {});
     t.end();
 });

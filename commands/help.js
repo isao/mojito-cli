@@ -42,7 +42,7 @@ function main(args, opts, meta, cb) {
         cb(null, module.exports.load(null, cmd).usage);
 
     } else if (mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
-        cb(null, module.exports.load(resolve(mojito_cmds.path, cmd)).usage);
+        cb(null, module.exports.load(resolve(meta.mojito.commandsPath, cmd)).usage);
 
     } else {
         help(meta);

@@ -71,7 +71,7 @@ function exec(cmd, args, opts, meta, cb) {
 
     } else if (mojito_cmds && mojito_cmds.indexOf(cmd)) {
         log.debug('runnning legacy mojito command %s', cmd);
-        mod = load(resolve(mojito_cmds.path, cmd));
+        mod = load(resolve(meta.mojito.commandsPath, cmd));
         mod.run(args, opts, cb);
 
     } else {
