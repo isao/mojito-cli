@@ -62,6 +62,8 @@ test('mojito help (app cwd)', function(t) {
         t.equal(log.record.shift().level, 'debug');
         t.equal(log.record.shift().level, 'debug');
         t.equal(log.record.shift().level, 'debug');
+        t.equal(log.record.shift().level, 'debug');
+        t.equal(log.record.shift().level, 'debug');
         t.equal(log.record.length, 0);
         reset();
         t.end();

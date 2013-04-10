@@ -103,8 +103,6 @@ test('getmeta someapp', function(t) {
 
     t.end();
 
-console.log(actual);
-
 /*
 console.log(actual);
 { cli:

@@ -64,6 +64,7 @@ function tryRequire(str) {
     var mod = false;
     try {
         mod = require(str);
+        log.debug('required %s', str);
     } catch(err) {
         log.debug('unable to require %s', str);
     }
