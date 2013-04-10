@@ -16,24 +16,24 @@ var resolve = require('path').resolve,
     bundled; // map of package name:require-string
 
 
+/**
+ * @param {string} path of process' current working directory
+ * @return {object} combined cli, app, and mojito metadata
+ */
 function getmeta(cwd) {
-    var cli = require('./package'),
-        meta = {};
+    var isme = cwd === __dirname,
+        cli = readpkg(__dirname),
+        app = isme || readpkg(cwd),
+        mojito = app && readpkg.mojito(cwd);
 
-    log.debug('%s v%s at %s', cli.name, cli.version, __dirname);
-    meta.cli = {
-        name: cli.name,
-        description: cli.description,
-        binname: Object.keys(cli.bin)[0],
-        version: cli.version,
-        commands: Object.keys(bundled)
+    // save list of bundled commands for help
+    cli.commands = Object.keys(bundled);
+
+    return {
+    	cli: cli,
+    	app: app,
+    	mojito: mojito
     };
-
-    meta.app = readpkg(cwd);
-    if (meta.app) {
-        meta.mojito = readpkg.mojito(cwd);
-    }
-    return meta;
 }
 
 function altcmd(opts) {

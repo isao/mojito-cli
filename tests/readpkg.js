@@ -13,12 +13,6 @@ test('readpkg exports', function (t) {
     t.end();
 });
 
-test("don't read own package.json", function(t) {
-    var actual = readpkg(fromhere('../'));
-    t.same(actual, false);
-    t.end();
-});
-
 test('read someapp', function(t) {
     var pkg = require('./fixtures/someapp/package'),
         actual = readpkg(fromhere('./fixtures/someapp'));

@@ -12,7 +12,8 @@ function getMeta() {
         cli: {
             name: 'mojito-cli',
             version: '1.2.3',
-            commands: ['create', 'help', 'info', 'version', 'make-it-rain']
+            commands: ['create', 'help', 'info', 'version', 'make-it-rain'],
+            description: 'whoop whoop'
         }
     };
 }
@@ -31,8 +32,8 @@ test('help exports', function(t) {
 test('help simple', function(t) {
     function cb(err, msg) {
         t.equals(err, undefined);
-        t.equals(log.record.shift().message, 'Usage: undefined <command> [options]');
-        t.equals(log.record.shift().message, 'The mojito-cli package provides command line helpers for mojito developers.');
+        t.equals(log.record.shift().message, 'Usage: mojito <command> [options]');
+        t.equals(log.record.shift().message, 'whoop whoop');
         t.equals(log.record.shift().message, 'Available commands: create, help, info, version, make-it-rain');
         t.equals(log.record.shift().message, 'Additional commands are available from within an application directory that has\nmojito installed.');
         t.equals(log.record.length, 0);

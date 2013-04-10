@@ -10,16 +10,16 @@ var resolve = require('path').resolve,
     log = require('../lib/log');
 
 
-function usage(binname, pkgname) {
-    log.info('Usage: %s <command> [options]', binname);
-    log.info('The %s package provides command line helpers for mojito developers.', pkgname);
+function usage(description) {
+    log.info('Usage: mojito <command> [options]');
+    log.info(description);
 }
 
 function help(meta) {
     var bundled = meta.cli.commands,
         every = meta.mojito ? bundled.concat(meta.mojito.commands) : bundled;
 
-    usage(meta.cli.binname, meta.cli.name);
+    usage(meta.cli.description);
     log.info('Available commands: %s', every.join(', '));
 
     if (!meta.mojito) {
