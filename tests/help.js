@@ -1,6 +1,8 @@
 var test = require('tap').test,
     help = require('../commands/help'),
-    log = require('../lib/log');
+    log = require('../lib/log'),
+
+    resolve = require('path').resolve;
 
 
 // buffer log msgs instead of outputing them
@@ -75,4 +77,22 @@ test('help create', function(t) {
     help(['create'], {}, {}, cb);
 });
 
+test('help mock jslint', function(t) {
+    var meta = {
+            mojito: {
+                commands: ['jslint', 'make-it-rain', 'create', 'jslint'],
+                commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')
+            }
+        };
+
+    t.plan(2);
+
+    function cb(err, msg) {
+        t.equal(err, null);
+        t.ok(msg.match(/^mock usage for mojito\/lib\/app\/commands\/jslint/));
+    }
+
+    reset();
+    help(['jslint'], {}, meta, cb);
+});
 
