@@ -23,7 +23,7 @@ var resolve = require('path').resolve,
 function getmeta(cwd) {
     var isme = cwd === __dirname,
         cli = readpkg(__dirname),
-        app = isme || readpkg(cwd),
+        app = !isme && readpkg(cwd),
         mojito = app && readpkg.mojito(cwd);
 
     // save list of bundled commands for help
