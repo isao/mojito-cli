@@ -7,18 +7,24 @@
 'use strict';
 
 var resolve = require('path').resolve,
-    log = require('./lib/log'),
     nopt = require('nopt'),
+
+    log = require('./lib/log'),
+    readpkg = require('./lib/readpkg'),
 
     options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
     aliases = {h: '--help', v: '--version', d: '--debug'},
-    readpkg = require('./lib/readpkg'),
-    bundled; // map of package name:require-string
+    bundled = { // map of package name:require-string
+        'create': 'mojito-create',
+        'help': './commands/help',
+        'info': './commands/info',
+        'version': './commands/version'
+    };
 
 
 /**
  * @param {string} path of process' current working directory
- * @return {object} combined cli, app, and mojito metadata
+ * @return {object} combined cli, app, and mojito metadata, see readpkg.js
  */
 function getmeta(cwd) {
     var isme = cwd === __dirname,
@@ -49,13 +55,12 @@ function altcmd(opts) {
     return cmd;
 }
 
-function loadModule(str, cmd) {
-    var mod;
+function tryRequire(str) {
+    var mod = false;
     try {
-        // require module by pathname, or by bundled command name
-        mod = require(str || bundled[cmd]);
+        mod = require(str);
     } catch(err) {
-        log.debug('unable to require %s', str || bundled[cmd]);
+        log.debug('unable to require %s', str);
     }
     return mod;
 }
@@ -65,31 +70,31 @@ function loadModule(str, cmd) {
  * @param {object} cli, app, and mojito, metadata
  * @return {object|function} module loaded via `require`
  */
-function getModule(cmd, meta) {
+function load(cmd, meta) {
     var mod = false,
         mo_cmd_list = meta.mojito && meta.mojito.commands,
         mo_cmd_path = mo_cmd_list && meta.mojito.commandsPath;
 
     if (bundled.hasOwnProperty(cmd)) {
-        mod = loadModule(bundled[cmd]);
+        mod = tryRequire(bundled[cmd]);
 
     } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
-        mod = loadModule(resolve(mo_cmd_path, cmd));
+        mod = tryRequire(resolve(mo_cmd_path, cmd));
     }
 
     return mod;
 }
 
 function exec(cmd, args, opts, meta, cb) {
-    var mod = getModule(cmd, meta);
+    var mod = load(cmd, meta);
 
-    if ('function' === typeof mod) {
-        log.debug('getting bundled command %s', cmd);
-        mod(args, opts, meta, cb);
-
-    } else if (('object' === typeof mod) && ('run' in mod)) {
+    if (('object' === typeof mod) && ('run' in mod)) {
         log.debug('runnning legacy mojito command %s', cmd);
         mod.run(args, opts, cb);
+
+    } else if ('function' === typeof mod) {
+        log.debug('getting bundled command %s', cmd);
+        mod(args, opts, meta, cb);
 
     } else {
         cb('Unable to invoke command ' + cmd);
@@ -110,19 +115,13 @@ function main(argv, cwd, cb) {
         cmd = altcmd(opts);
     }
 
-    log.debug('cmd: %s, opts: %j', cmd, opts);
+    log.debug('cmd: %s, args: %j, opts: %j', cmd, args, opts);
     exec(cmd, args, opts, getmeta(cwd), cb);
 
     return cmd;
 }
 
-bundled = {
-    'create': 'mojito-create',
-    'help': './commands/help',
-    'info': './commands/info',
-    'version': './commands/version'
-};
 
 module.exports = main;
-module.exports.log = log;
-module.exports.load = loadModule;
+module.exports.getmeta = getmeta;
+module.exports.load = load; // help.js

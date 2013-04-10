@@ -7,6 +7,7 @@
 'use strict';
 
 var resolve = require('path').resolve,
+    load = require('../').load,
     log = require('../lib/log');
 
 
@@ -31,26 +32,23 @@ function help(meta) {
 }
 
 function main(args, opts, meta, cb) {
-    var cmd = args[0],
-        mojito_cmds = meta.mojito && meta.mojito.commands;
+    var cmd = args.shift() || '',
+        mod;
 
-    if (!cmd || ('help' === cmd)) {
+    if (!cmd) {
         help(meta);
         cb();
 
-    } else if (meta.cli.commands.indexOf(cmd) > -1) {
-        cb(null, module.exports.load(null, cmd).usage);
-
-    } else if (mojito_cmds && (mojito_cmds.indexOf(cmd) > -1)) {
-        cb(null, module.exports.load(resolve(meta.mojito.commandsPath, cmd)).usage);
-
     } else {
-        help(meta);
-        cb('No help available for command ' + cmd);
+        mod = load(cmd, meta);
+        if (mod && mod.usage) {
+            cb(null, mod.usage);
+
+        } else {
+            help(meta);
+            cb('No help available for command ' + cmd);
+        }
     }
 }
 
 module.exports = main;
-module.exports.log = log;
-module.exports.usage = usage;
-module.exports.load = require('../').load;

@@ -1,6 +1,6 @@
 var test = require('tap').test,
     cli = require('../'),
-    log = cli.log;
+    log = require('../lib/log');
 
 
 // buffer log msgs instead of outputing them
@@ -21,9 +21,8 @@ function noCb(t) {
 }
 
 test('index exports', function (t) {
-    var module = require('../');
-    t.equal('function', typeof module);
-    t.same(Object.keys(module), ['log', 'load']);
+    t.equal('function', typeof cli);
+    t.same(Object.keys(cli), ['getmeta', 'load']);
     t.end();
 });
 
@@ -163,15 +162,27 @@ test('nonesuch', function(t) {
 });
 
 test('load "version"', function(t) {
-    var actual = cli.load('./commands/version');
+    var actual = cli.load('version', {});
     t.equals(typeof actual, 'function');
     t.equals(typeof actual.usage, 'string');
     t.ok(actual.usage.match(/^Usage: mojito version /));
     t.end();
 });
 
+test('load false', function(t) {
+    var actual = cli.load('foo', {});
+    t.equals(actual, false);
+    t.end();
+});
+
 test('load fail', function(t) {
-    var actual = cli.load('foo');
-    t.equals(actual, undefined);
+    var meta = {
+            mojito: {
+                commands: ['foo'],
+                commandsPath: '/bar/baz'
+            }
+        },
+        actual = cli.load('foo', meta);
+    t.equals(actual, false);
     t.end();
 });
