@@ -1,4 +1,4 @@
-mojito-cli [![Build Status](https://travis-ci.org/isao/mojito-cli.png)](https://travis-ci.org/isao/mojito-cli)
+mojito-cli [![Build Status](https://travis-ci.org/yahoo/mojito-cli.png)](https://travis-ci.org/yahoo/mojito-cli)
 ==========
 
 `mojito-cli` is a command line tool for [Mojito](https://github.com/yahoo/mojito) developers. `mojito` components that are unrelated to the core library and runtime will be moving to separate packages. 
