@@ -111,7 +111,7 @@ test('version mojit foo', function(t) {
     function cb(err, msg) {
         t.ok(~log.record.shift().message.indexOf('no package.json found at mojits/foo'));
         t.ok(~log.record.shift().message.indexOf('Missing package.json.'));
-        t.equals(log.record.shift().message, vers.usage);
+        t.ok(~log.record.shift().message.indexOf('Usage: mojito version'));
         t.end();
     }
 
