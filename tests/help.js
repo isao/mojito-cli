@@ -89,7 +89,7 @@ test('help create', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.ok(msg.match(/^mojito create/));
+        t.equal(msg.slice(0, 20), ('Usage: mojito create'));
     }
 
     help(['create'], {}, {}, cb);
