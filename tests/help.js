@@ -88,8 +88,8 @@ test('help create', function(t) {
     t.plan(2);
 
     function cb(err, msg) {
-        t.equals(err, null);
-        t.equal(msg.slice(0, 20), ('Usage: mojito create'));
+        t.equal(err, null);
+        t.ok(msg.indexOf('mojito create'));
     }
 
     help(['create'], {}, {}, cb);
