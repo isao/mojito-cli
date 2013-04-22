@@ -94,7 +94,7 @@ function load(cmd, meta) {
 function exec(cmd, args, opts, meta, cb) {
     var mod = load(cmd, meta);
 
-    if (('object' === typeof mod) && ('run' in mod)) {
+    if (('run' in mod) && ('function' === typeof mod.run)) {
         log.debug('runnning legacy mojito command %s', cmd);
         mod.run(args, opts, cb);
 
