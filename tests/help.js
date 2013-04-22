@@ -89,7 +89,7 @@ test('help create', function(t) {
 
     function cb(err, msg) {
         t.equal(err, null);
-        t.ok(msg.indexOf('mojito create'));
+        t.ok(~msg.indexOf('mojito create'));
     }
 
     help(['create'], {}, {}, cb);
