@@ -12,8 +12,8 @@ var resolve = require('path').resolve,
     log = require('./lib/log'),
     readpkg = require('./lib/readpkg'),
 
-    options = {'help': Boolean, 'version': Boolean, 'debug': Boolean},
-    aliases = {h: '--help', v: '--version', d: '--debug'},
+    options = {'help': Boolean, 'version': Boolean, 'debug': Boolean, 'context': String, 'keyval': String, 'name': String, 'port': Number},
+    aliases = {h: '--help', v: '--version', d: '--debug', p: '--port'},
     bundled = { // map of package name:require-string
         'create': 'mojito-create',
         'help': './commands/help',

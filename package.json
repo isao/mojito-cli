@@ -8,7 +8,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-create": "*",
+    "mojito-create": "~0.0.1",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
   },
@@ -22,7 +22,7 @@
   "scripts": {
     "preinstall": "scripts/preinstall.sh",
     "test": "tap -d tests/*.js",
-    "lint": "jshint {.,commands,lib}/*.js",
+    "lint": "ls {.,lib}/*.js | xargs jshint && echo ok",
     "cover": "istanbul cover --dir artifacts/coverage -- test",
     "bumppatch": "npm version patch -m \"tag v%s (based on $(git describe))\""
   },
