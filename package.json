@@ -22,7 +22,7 @@
   "scripts": {
     "preinstall": "scripts/preinstall.sh",
     "test": "tap -d tests/*.js",
-    "lint": "ls {.,lib}/*.js | xargs jshint && echo ok",
+    "lint": "jshint {.,commands,lib}/*.js",
     "cover": "istanbul cover --dir artifacts/coverage -- test",
     "bumppatch": "npm version patch -m \"tag v%s (based on $(git describe))\""
   },

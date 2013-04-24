@@ -6,8 +6,7 @@
 /*jshint node:true */
 'use strict';
 
-var resolve = require('path').resolve,
-    load = require('../').load,
+var load = require('../').load,
     log = require('../lib/log');
 
 
