@@ -1,6 +1,6 @@
 {
   "name": "mojito-cli",
-  "version": "0.0.0PR2",
+  "version": "0.0.1",
   "description": "The mojito-cli package provides command line helpers for Mojito developers.",
   "bin": {
     "mojito": "bin/mojito"
