@@ -1,0 +1,9 @@
+{
+    "commands": {
+        "create": "mojito-create",
+        "build": "mojito-build",
+        "help": "./commands/help",
+        "info": "./commands/info",
+        "version": "./commands/version"
+    }
+}
