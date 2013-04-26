@@ -10,7 +10,7 @@
   "dependencies": {
     "mojito-create": "~0.0.1",
     "npmlog": "0.0.2",
-    "nopt": "~2.1.1"
+    "optimist": "~0.4.0"
   },
   "devDependencies": {
     "tap": "~0.4.1"
