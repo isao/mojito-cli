@@ -13,13 +13,13 @@ test('readpkg exports', function (t) {
     t.end();
 });
 
-test('read nonesuch', function(t) {
+test('readpkg nonesuch', function(t) {
     var actual = readpkg(fromhere('fixtures'));
     t.equal(actual, false);
     t.end();
 });
 
-test('readMyOwn', function(t) {
+test('readpkg.cli()', function(t) {
     var clipkg = fromhere('../package.json'),
         expected = require(clipkg),
         actual = readpkg.cli(fromhere('../'));
@@ -35,7 +35,7 @@ test('readMyOwn', function(t) {
     t.end();
 });
 
-test('read someapp', function(t) {
+test('readpkg someapp', function(t) {
     var expected = require('./fixtures/someapp/package.json'),
         actual = readpkg(fromhere('./fixtures/someapp'));
 
@@ -48,7 +48,7 @@ test('read someapp', function(t) {
     t.end();
 });
 
-test('readMojito nonesuch', function(t) {
+test('read.mojito() nonesuch', function(t) {
     var actual = readpkg.mojito(fromhere('./fixtures'));
     t.equal(actual, false);
     t.end();

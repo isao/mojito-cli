@@ -109,6 +109,7 @@ test('help create', function(t) {
 test('help mock jslint', function(t) {
     var env = {
             args: ['jslint'],
+            cli: {commands:{}},
             mojito: {
                 commands: ['jslint', 'beep', 'boop'],
                 commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')

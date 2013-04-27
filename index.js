@@ -3,13 +3,11 @@
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
-/*jshint node:true */
 'use strict';
 
 var resolve = require('path').resolve,
-    nopt = require('nopt'),
-
     log = require('./lib/log'),
+    getopts = require('./lib/getopts'),
     readpkg = require('./lib/readpkg'),
 
     options = {
@@ -31,44 +29,6 @@ var resolve = require('path').resolve,
     };
 
 
-/**
- * @param {string} path of process' current working directory
- * @return {object} combined cli, app, and mojito metadata, see readpkg.js
- */
-function getmeta(cwd) {
-    var isme = cwd === __dirname,
-        cli = readpkg(__dirname),
-        app = !isme && readpkg(cwd),
-        mojito = app && readpkg.mojito(cwd);
-
-    // convenience flag for when we have a mojito app but no mojito installed
-    if (app) {
-        app.needsMojito = app.dependencies.mojito && !mojito;
-    }
-
-    // save list of bundled commands for help
-    cli.commands = Object.keys(bundled);
-
-    return {
-        cli: cli,
-        app: app,
-        mojito: mojito
-    };
-}
-
-function altcmd(opts) {
-    var cmd;
-    if (opts.version) {
-        cmd = 'version';
-    } else if (opts.help) {
-        cmd = 'help';
-    } else {
-        log.error('No command...');
-        cmd = 'help';
-    }
-    return cmd;
-}
-
 function tryRequire(str) {
     var mod = false;
     try {
@@ -85,58 +45,64 @@ function tryRequire(str) {
  * @param {object} cli, app, and mojito, metadata
  * @return {object|function} module loaded via `require`
  */
-function load(cmd, meta) {
+function load(cmd, env) {
     var mod = false,
-        mo_cmd_list = meta.mojito && meta.mojito.commands,
-        mo_cmd_path = mo_cmd_list && meta.mojito.commandsPath;
+        mo_cmd_list = env.mojito && env.mojito.commands,
+        mo_cmd_path = mo_cmd_list && env.mojito.commandsPath;
 
-    if (bundled.hasOwnProperty(cmd)) {
+    if (env.cli.commands.hasOwnProperty(cmd)) {
         mod = tryRequire(bundled[cmd]);
 
     } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
+        // TODO
+        // 1. reparse options based on mod.options
+        // 2. repopulate env.args & env.opts
         mod = tryRequire(resolve(mo_cmd_path, cmd));
     }
 
     return mod;
 }
 
-function exec(cmd, args, opts, meta, cb) {
-    var mod = load(cmd, meta);
+function exec(env, cb) {
+    var mod = load(env.command, env);
 
     if (mod && mod.hasOwnProperty('run')) {
-        log.debug('runnning legacy mojito command %s', cmd);
-        mod.run(args, opts, cb);
+        log.debug('runnning legacy mojito command %s', env.command);
+        mod.run(env.args, env.opts, cb);
 
     } else if ('function' === typeof mod) {
-        log.debug('getting bundled command %s', cmd);
-        mod(args, opts, meta, cb);
+        log.debug('getting bundled command %s', env.command);
+        mod(env, cb);
 
     } else {
-        cb('Unable to invoke command ' + cmd);
+        cb('Unable to invoke command ' + env.command);
     }
 }
 
 function main(argv, cwd, cb) {
-    var opts = nopt(options, aliases, argv, 0),
-        args = opts.argv.remain,
-        cmd = (args.shift() || '').toLowerCase();
+    var is_me = cwd === __dirname,
+        env = getopts(argv); // {command:'…', args:[…], opts:{…}}
 
-    if (opts.debug) {
+    if (env.opts.debug) {
         log.level = 'debug';
     }
 
-    // treat lone --help and --version flags like commands
-    if (!cmd) {
-        cmd = altcmd(opts);
+    if (!env.command) {
+    	log.error('No command.');
+    	env.command = 'help';
     }
 
-    log.debug('cmd: %s, args: %j, opts: %j', cmd, args, opts);
-    exec(cmd, args, opts, getmeta(cwd), cb);
+    env.cwd = cwd;
+    env.cli = readpkg.cli(__dirname);
+    env.app = !is_me && readpkg(cwd);
+    env.mojito = env.app && readpkg.mojito(cwd);
+    env.argv = argv;
+    log.debug('env:', env);
 
-    return cmd;
+    exec(env, cb);
+    return env.command;
 }
 
 
 module.exports = main;
-module.exports.getmeta = getmeta;
 module.exports.load = load; // help.js
