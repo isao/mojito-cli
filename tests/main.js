@@ -8,7 +8,7 @@ var test = require('tap').test,
 //log.level = 'silly';
 log.pause();
 
-function reset(t) {
+function reset() {
     log.record = [];
     log._buffer = [];
 }
@@ -156,11 +156,25 @@ test('command takes priority over atl cmd flag', {skip:1}, function(t) {
     t.end();
 });
 
+test('no args', function(t) {
+    t.plan(3);
+
+    function cb(err, msg) {
+        t.equals(err, undefined, 'err undefined');
+        t.ok(log.record.length > 3);
+        reset();
+    }
+
+    reset();
+    t.equals(cli([], '', cb), 'help');
+});
+
 test('nonesuch', function(t) {
     t.plan(2);
 
     function cb(err, msg) {
         t.equals(err, 'Unable to invoke command nonesuch');
+        reset();
     }
 
     t.equals(cli(['nonesuch'], '', cb), 'nonesuch');

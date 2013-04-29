@@ -3,9 +3,10 @@ var test = require('tap').test,
 
 test('no args', function(t) {
     var expected = {
-            command: undefined,
+            command: '',
             args: [],
-            opts: {}
+            opts: {},
+            orig: {}
         };
 
     t.same(fn([]), expected);
@@ -27,5 +28,26 @@ test('version|--version|-v', function(t) {
     t.same(fn(['version']).command, expected);
     t.same(fn(['--version']).command, expected);
     t.same(fn(['-v']).command, expected);
+    t.end();
+});
+
+test('command is lowercased', function(t) {
+    t.equal(fn(['Version']).command, 'version');
+    t.equal(fn(['hELp']).command, 'help');
+    t.end();
+});
+
+test('options are lowercased', function(t) {
+    t.same(fn(['--Version']).opts, {version: true});
+    t.same(fn(['--hELp']).opts, {help: true});
+    t.end();
+});
+
+test('111', {skip:1}, function(t) {
+    var argv = ['--version', 'help'],
+        actual = fn(argv);
+
+    t.same(actual.opts, {});
+    t.same(actual.opts.version, true);
     t.end();
 });
