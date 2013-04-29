@@ -151,7 +151,7 @@ test('mojito info', function(t) {
     t.equals(cli(['info'], '', cb), 'info');
 });
 
-test('command takes priority over atl cmd flag', {skip:1}, function(t) {
+test('command takes priority over alt cmd flag', function(t) {
     t.equals(cli(['--version', 'help'], '', noop), 'help');
     t.end();
 });

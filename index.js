@@ -80,11 +80,11 @@ function exec(env, cb) {
 }
 
 function main(argv, cwd, cb) {
-    var is_me = cwd === __dirname,
-        env = getopts(argv); // {command:'…', args:[…], opts:{…}}
+    var cli = readpkg.cli(__dirname),
+        env = getopts(argv, cli.options);
 
-    if (env.opts.debug) {
-        log.level = 'debug';
+    if (env.opts.loglevel) {
+        log.level = env.opts.loglevel;
     }
 
     if (!env.command) {
@@ -92,12 +92,12 @@ function main(argv, cwd, cb) {
     	env.command = 'help';
     }
 
+    // collect parsed args and env metadata
     env.cwd = cwd;
-    env.cli = readpkg.cli(__dirname);
-    env.app = !is_me && readpkg(cwd);
+    env.cli = cli;
+    env.app = (cwd !== __dirname) && readpkg(cwd);
     env.mojito = env.app && readpkg.mojito(cwd);
-    env.argv = argv;
-    log.debug('env:', env);
+    log.silly('env:', env);
 
     exec(env, cb);
     return env.command;

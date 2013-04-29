@@ -5,5 +5,11 @@
         "help": "./commands/help",
         "info": "./commands/info",
         "version": "./commands/version"
-    }
+    },
+    "options": [
+        {"shortName": "l", "longName": "loglevel", "hasValue": true},
+        {"shortName": "h", "longName": "help", "hasValue": false},
+        {"shortName": "d", "longName": "directory", "hasValue": true},
+        {"shortName": "v", "longName": "version", "hasValue": false}
+    ]
 }
