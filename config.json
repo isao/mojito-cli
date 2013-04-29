@@ -7,9 +7,9 @@
         "version": "./commands/version"
     },
     "options": [
-        {"shortName": "l", "longName": "loglevel", "hasValue": true},
-        {"shortName": "h", "longName": "help", "hasValue": false},
-        {"shortName": "d", "longName": "directory", "hasValue": true},
-        {"shortName": "v", "longName": "version", "hasValue": false}
+        {"shortName": "d", "hasValue": true,  "longName": "directory"},
+        {"shortName": "h", "hasValue": false, "longName": "help"},
+        {"shortName": "l", "hasValue": true,  "longName": "loglevel"},
+        {"shortName": "v", "hasValue": false, "longName": "version"}
     ]
 }
