@@ -8,25 +8,7 @@
 var resolve = require('path').resolve,
     log = require('./lib/log'),
     getopts = require('./lib/getopts'),
-    readpkg = require('./lib/readpkg'),
-
-    options = {
-        'help': Boolean,
-        'version': Boolean,
-        'debug': Boolean,
-        'context': String,
-        'directory': String,
-        'keyval': String,
-        'name': String,
-        'port': Number
-    },
-    aliases = {h: '--help', v: '--version', d: '--debug', p: '--port'},
-    bundled = { // map of package name:require-string
-        'create': 'mojito-create',
-        'help': './commands/help',
-        'info': './commands/info',
-        'version': './commands/version'
-    };
+    readpkg = require('./lib/readpkg');
 
 
 function tryRequire(str) {
@@ -51,7 +33,7 @@ function load(cmd, env) {
         mo_cmd_path = mo_cmd_list && env.mojito.commandsPath;
 
     if (env.cli.commands.hasOwnProperty(cmd)) {
-        mod = tryRequire(bundled[cmd]);
+        mod = tryRequire(env.cli.commands[cmd]);
 
     } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
         mod = tryRequire(resolve(mo_cmd_path, cmd));
@@ -89,8 +71,8 @@ function main(argv, cwd, cb) {
     }
 
     if (!env.command) {
-    	log.error('No command.');
-    	env.command = 'help';
+        log.error('No command.');
+        env.command = 'help';
     }
 
     // collect parsed args and env metadata
