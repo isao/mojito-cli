@@ -54,9 +54,6 @@ function load(cmd, env) {
         mod = tryRequire(bundled[cmd]);
 
     } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
-        // TODO
-        // 1. reparse options based on mod.options
-        // 2. repopulate env.args & env.opts
         mod = tryRequire(resolve(mo_cmd_path, cmd));
     }
 
@@ -65,6 +62,9 @@ function load(cmd, env) {
 
 function exec(env, cb) {
     var mod = load(env.command, env);
+
+    // re-parse command line arguments
+    getopts.redux(env, mod.options);
 
     if (mod && mod.hasOwnProperty('run')) {
         log.debug('runnning legacy mojito command %s', env.command);
@@ -85,6 +85,7 @@ function main(argv, cwd, cb) {
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
+        log.silly('logging level set to', env.opts.loglevel);
     }
 
     if (!env.command) {

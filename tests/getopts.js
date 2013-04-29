@@ -91,6 +91,17 @@ test('string arg (ok) with other args', function(t) {
     t.end();
 });
 
+test('nopt equates --dir with --directory', function(t) {
+    var argv = ['--dir', 'lights/camera/action', 'shout', 'aloud'],
+        actual = fn(argv, cfg);
+
+    t.same(actual.command, 'shout');
+    t.same(actual.opts.directory, 'lights/camera/action');
+    t.same(actual.args, ['aloud']);
+    t.end();
+});
+
+
 test('test --debug is alias for --loglevel debug', function(t) {
     var argv = ['--debug', 'shout', 'aloud'],
         actual = fn(argv, cfg);
@@ -115,5 +126,15 @@ test('have longName, but no shortName', function(t) {
 
     t.same(actual.command, 'shout');
     t.same(actual.opts.mahershalalhashbaz, true);
+    t.end();
+});
+
+test('redux', function(t) {
+    var argv = ['--dir', 'lights/camera/action', 'create', 'app', 'Foo'],
+        actual = fn(argv, cfg);
+
+    t.same(actual.command, 'create');
+    t.same(actual.opts.directory, 'lights/camera/action');
+    t.same(actual.args, ['app', 'Foo']);
     t.end();
 });
