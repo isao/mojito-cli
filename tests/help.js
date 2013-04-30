@@ -11,7 +11,7 @@ function getEnv() {
     return {
         command: 'help',
         args: [],
-        opts: [],
+        opts: {},
         cli: {
             name: 'mojito-cli',
             version: '1.2.3',
