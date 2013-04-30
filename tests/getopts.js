@@ -92,15 +92,14 @@ test('string arg (ok) with other args', function(t) {
 });
 
 test('nopt equates --dir with --directory', function(t) {
-    var argv = ['--dir', 'lights/camera/action', 'shout', 'aloud'],
+    var argv = ['--dir', 'lights/camera/action', 'create', 'app', 'Foo'],
         actual = fn(argv, cfg);
 
-    t.same(actual.command, 'shout');
+    t.same(actual.command, 'create');
     t.same(actual.opts.directory, 'lights/camera/action');
-    t.same(actual.args, ['aloud']);
+    t.same(actual.args, ['app', 'Foo']);
     t.end();
 });
-
 
 test('test --debug is alias for --loglevel debug', function(t) {
     var argv = ['--debug', 'shout', 'aloud'],
@@ -129,12 +128,49 @@ test('have longName, but no shortName', function(t) {
     t.end();
 });
 
-test('redux', function(t) {
-    var argv = ['--dir', 'lights/camera/action', 'create', 'app', 'Foo'],
+test('ice cream --flavor mint (no-redux)', function(t) {
+    var argv = ['ice', 'cream', '--flavor', 'mint'],
+        expected = {
+            command: 'ice',
+            args: [ 'cream', 'mint' ],
+            opts: { flavor: true },
+            orig: [ 'ice', 'cream', '--flavor', 'mint' ],
+        },
         actual = fn(argv, cfg);
 
-    t.same(actual.command, 'create');
-    t.same(actual.opts.directory, 'lights/camera/action');
-    t.same(actual.args, ['app', 'Foo']);
+    t.same(actual, expected);
+    t.end();
+});
+
+test('ice cream --flavor mint (redux)', function(t) {
+    var env = {
+            command: 'ice',
+            args: [ 'cream', 'mint' ],
+            opts: { flavor: true },
+            orig: [ 'ice', 'cream', '--flavor', 'mint' ],
+            cli: {
+                options: [{
+                    shortName: 'f',
+                    longName: 'flavor',
+                    hasValue: true // i.e. "mint"
+                }]
+            }
+        },
+        expected = {
+            command: 'ice',
+            args: [ 'cream' ],
+            opts: { flavor: 'mint' }, // <- that's what we want
+            orig: [ 'ice', 'cream', '--flavor', 'mint' ],
+            cli: {
+                options: [{
+                    shortName: 'f',
+                    longName: 'flavor',
+                    hasValue: true // i.e. "nice"
+                }]
+            }
+        },
+        actual = fn.redux(env, {});
+
+    t.same(actual, expected);
     t.end();
 });
