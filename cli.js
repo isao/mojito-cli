@@ -23,6 +23,7 @@ function tryRequire(str) {
 }
 
 /**
+ * load a module for use as a subcommand
  * @param {string} sub-command, like 'help', 'create', etc.
  * @param {object} cli, app, and mojito, metadata
  * @return {object|function} module loaded via `require`
@@ -49,10 +50,21 @@ function load(cmd, env) {
     return mod;
 }
 
+/**
+ * invoke subcommand with env metadata and callback
+ * @param {object} env
+ *   @param {array} args command line arguments (see getopts.js)
+ *   @param {object} opts command line options (see getopts.js)
+ *   @param {string} cwd absolute path to current working directory
+ *   @param {object} cli metadata (see getenv.js:cli())
+ *   @param {object|false} app metadata (see getenv.js:read())
+ *   @param {object|false} mojito metadata (see getenv.js:mojito())
+ * @param {function(err, msg)} callback
+ */
 function exec(env, cb) {
     var mod = load(env.command, env);
 
-    // re-parse command line arguments
+    // re-parse command line arguments; may modify env.args & env.opts
     getopts.redux(env, mod.options);
 
     if (mod && mod.hasOwnProperty('run')) {
@@ -68,6 +80,13 @@ function exec(env, cb) {
     }
 }
 
+/**
+ * gather configs and metadata in env object, and call exec
+ * @param {array} argv command line arguments process.argv.slice(2)
+ * @param {string} cwd current working directory process.cwd()
+ * @param {function(err, msg)} callback
+ * @return {string} subcommand name
+ */
 function main(argv, cwd, cb) {
     var cli = getenv.cli(__dirname),
         env = getopts(argv, cli.options);
