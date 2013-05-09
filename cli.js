@@ -32,11 +32,18 @@ function load(cmd, env) {
         mo_cmd_list = env.mojito && env.mojito.commands,
         mo_cmd_path = mo_cmd_list && env.mojito.commandsPath;
 
+    // command path is registered in ./config.js:commands hash
     if (env.cli.commands.hasOwnProperty(cmd)) {
         mod = tryRequire(env.cli.commands[cmd]);
 
-    } else if (mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
-        mod = tryRequire(resolve(mo_cmd_path, cmd));
+    } else {
+        // command is in one of node's module.paths
+        mod = tryRequire('mojito-' + cmd);
+
+        // command is in local mojito commands path (BC)
+        if (!mod && mo_cmd_list && (mo_cmd_list.indexOf(cmd) > -1)) {
+            mod = tryRequire(resolve(mo_cmd_path, cmd));
+        }
     }
 
     return mod;
