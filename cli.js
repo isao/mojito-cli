@@ -8,7 +8,7 @@
 var resolve = require('path').resolve,
     log = require('./lib/log'),
     getopts = require('./lib/getopts'),
-    readpkg = require('./lib/readpkg');
+    getenv = require('./lib/getenv');
 
 
 function tryRequire(str) {
@@ -62,7 +62,7 @@ function exec(env, cb) {
 }
 
 function main(argv, cwd, cb) {
-    var cli = readpkg.cli(__dirname),
+    var cli = getenv.cli(__dirname),
         env = getopts(argv, cli.options);
 
     if (env.opts.loglevel) {
@@ -78,8 +78,8 @@ function main(argv, cwd, cb) {
     // collect parsed args and env metadata
     env.cwd = cwd;
     env.cli = cli;
-    env.app = (cwd !== __dirname) && readpkg(cwd);
-    env.mojito = env.app && readpkg.mojito(cwd, env.opts.lib);
+    env.app = (cwd !== __dirname) && getenv(cwd);
+    env.mojito = env.app && getenv.mojito(cwd, env.opts.lib);
     log.silly('env:', env);
 
     exec(env, cb);
