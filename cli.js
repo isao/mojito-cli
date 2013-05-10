@@ -106,7 +106,7 @@ function main(argv, cwd, cb) {
     env.cwd = cwd;
     env.cli = cli;
     env.app = (cwd !== __dirname) && getenv(cwd);
-    env.mojito = env.app && getenv.mojito(cwd, env.opts.lib);
+    env.mojito = (env.app || env.opts.lib) && getenv.mojito(cwd, env.opts.lib);
     log.silly('env:', env);
 
     exec(env, cb);
