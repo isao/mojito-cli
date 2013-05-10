@@ -38,7 +38,8 @@ function load(cmd, env) {
         mod = tryRequire(env.cli.commands[cmd]);
 
     } else {
-        // command is in one of node's module.paths
+        // command is requireable, presumably in $NODE_PATH `npm root -g`
+        // http://nodejs.org/api/modules.html#modules_all_together
         mod = tryRequire('mojito-' + cmd);
 
         // command is in local mojito commands path (BC)
