@@ -1,15 +1,16 @@
 {
   "name": "mojito-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The mojito-cli package provides command line helpers for Mojito developers.",
   "bin": {
     "mojito": "bin/mojito"
   },
-  "main": "index.js",
+  "main": "cli.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-build": "~0.0.0",
-    "mojito-create": "~0.0.2",
+    "mojito-cli-build": "~0.0.1",
+    "mojito-cli-create": "~0.0.4",
+    "mojito-cli-doc": "~0.0.1",
     "npmlog": "0.0.2",
     "nopt": "~2.1.1"
   },
@@ -24,6 +25,7 @@
     "lint": "jshint {.,lib,commands}/*.js",
     "test": "node tests",
     "cover": "istanbul cover --dir artifacts/coverage tests",
+    "clean": "git clean -dfx {.,tests}/artifacts",
     "preinstall": "scripts/preinstall.sh"
   },
   "repository": "git://github.com/yahoo/mojito-cli.git",
