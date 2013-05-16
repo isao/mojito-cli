@@ -27,7 +27,7 @@ test('version exports', function(t) {
 test('version simple', function(t) {
     function cb(err, msg) {
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3 '));
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
         t.equals(log.record.length, 0);
         t.end();
     }
@@ -57,8 +57,8 @@ test('version app', function(t) {
 
     function cb(err, msg) {
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5 '));
-        t.ok(~log.record.shift().message.indexOf('mojito v0.0.1 (installed locally)'));
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5');
+        t.equals(log.record.shift().message.trim(), 'mojito v0.0.1 (installed locally)');
         t.equals(log.record.length, 0);
         t.end();
     }
@@ -88,8 +88,8 @@ test('version application', function(t) {
 
     function cb(err, msg) {
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5 '));
-        t.ok(~log.record.shift().message.indexOf('mojito v0.0.1 (installed locally)'));
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5');
+        t.equals(log.record.shift().message.trim(), 'mojito v0.0.1 (installed locally)');
         t.equals(log.record.length, 0);
         t.end();
     }
@@ -118,9 +118,9 @@ test('version mojit foo', function(t) {
     };
 
     function cb(err, msg) {
-        t.ok(~log.record.shift().message.indexOf('no package.json found at mojits/foo'));
-        t.ok(~log.record.shift().message.indexOf('Missing package.json.'));
-        t.ok(~log.record.shift().message.indexOf('Usage: mojito version'));
+        t.equals(log.record.shift().message.trim(), 'no package.json found at mojits/foo');
+        t.equals(log.record.shift().message.trim(), 'Missing package.json.');
+        t.equals(log.record.shift().message.trim().slice(0, 21), 'Usage: mojito version');
         t.end();
     }
 
@@ -151,7 +151,7 @@ test('version mojit (missing mojit name)', function(t) {
         var m = log.record.shift();
         t.equals(err, undefined);
 
-        t.ok(~m.message.indexOf('Please specify a mojit name.'));
+        t.equals(m.message.trim(), 'Please specify a mojit name.');
         t.equals(m.level, 'error');
         
         t.equals(log.record.shift().message, vers.usage);

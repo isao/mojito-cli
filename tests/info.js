@@ -24,8 +24,8 @@ test('info exports', function(t) {
 test('info simple', function(t) {
     function cb(err, msg) {
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3'));
-        t.equals(log.record.shift().message.substring(0, 4), 'node');
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
+        t.equals(log.record.shift().message.trim().substring(0, 4), 'node');
         t.equals(log.record.length, 0);
         t.end();
     }
@@ -47,13 +47,13 @@ test('info app, no deps', function(t) {
         var m;
 
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3'));
-        t.equals(log.record.shift().message.substring(0, 4), 'node');
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5, lorem ipsum delor etc'));
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
+        t.ok(log.record.shift());
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
 
         m = log.record.shift();
         t.equals(m.level, 'warn');
-        t.ok(~m.message.indexOf('Mojito is not listed as a dependency in your package.json. Fix with:'));
+        t.equals(m.message.trim(), 'Mojito is not listed as a dependency in your package.json. Fix with:');
         t.equals(log.record.length, 2);
         t.end();
     }
@@ -74,13 +74,13 @@ test('info app, missing description', function(t) {
         var m;
 
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3'));
-        t.equals(log.record.shift().message.substring(0, 4), 'node');
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5, (missing description)'));
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
+        t.ok(log.record.shift());
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, (missing description)');
 
         m = log.record.shift();
         t.equals(m.level, 'warn');
-        t.ok(~m.message.indexOf('Mojito is not listed as a dependency in your package.json. Fix with:'));
+        t.equals(m.message.trim(), 'Mojito is not listed as a dependency in your package.json. Fix with:');
         t.equals(log.record.length, 2);
         t.end();
     }
@@ -105,16 +105,16 @@ test('info app, mojito dep', function(t) {
         var m;
 
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3'));
-        t.equals(log.record.shift().message.substring(0, 4), 'node');
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5, lorem ipsum delor etc'));
-        t.ok(~log.record.shift().message.indexOf('myapp dependencies: mojito'));
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
+        t.ok(log.record.shift());
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
+        t.equals(log.record.shift().message.trim(), 'myapp dependencies: mojito');
 
         m = log.record.shift();
         t.equals(m.level, 'warn');
-        t.ok(~m.message.indexOf('Mojito is not installed locally. Install with:'));
-        t.ok(~log.record.shift().message.indexOf('    npm install mojito'));
-        t.equals(log.record.shift().message, '');
+        t.equals(m.message.trim(), 'Mojito is not installed locally. Install with:');
+        t.equals(log.record.shift().message.trim(), 'npm install mojito');
+        t.ok(log.record.shift());
         t.equals(log.record.length, 0);
         t.end();
     }
@@ -143,14 +143,14 @@ test('info app, mojito dep, mojito local', function(t) {
     function cb(err, msg) {
         var m;
         t.equals(err, undefined);
-        t.ok(~log.record.shift().message.indexOf('mojito-cli v1.2.3'));
-        t.equals(log.record.shift().message.substring(0, 4), 'node');
-        t.ok(~log.record.shift().message.indexOf('myapp v3.4.5, lorem ipsum delor etc'));
+        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
+        t.ok(log.record.shift());
+        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
 
         m = log.record.shift();
         t.equals(m.level, 'info');
-        t.ok(~m.message.indexOf('myapp dependencies: mojito'));
-        t.ok(~log.record.shift().message.indexOf('mojito v0.0.1 (installed locally).'));
+        t.equals(m.message.trim(), 'myapp dependencies: mojito');
+        t.equals(log.record.shift().message.trim(), 'mojito v0.0.1 (installed locally).');
         t.equals(log.record.length, 0);
         t.end();
     }
