@@ -74,6 +74,9 @@ function exec(env, cb) {
     // re-parse command line arguments; may modify env.args & env.opts
     getopts.redux(env, mod.options);
 
+    // display with --log silly, too verbose for --debug
+    log.silly('env:', env);
+
     if (mod && mod.hasOwnProperty('run')) {
         log.debug('invoking legacy command %s', env.command);
         mod.run(env.args, env.opts, cb);
@@ -114,9 +117,6 @@ function main(argv, cwd, cb) {
     env.cli = cli;
     env.app = (cwd !== __dirname) && getenv(cwd);
     env.mojito = (env.app || lib) && getenv.mojito(cwd, lib);
-
-    // display with --log silly, too verbose for --debug
-    log.silly('env:', env);
 
     exec(env, cb);
     return env.command;
