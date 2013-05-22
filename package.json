@@ -26,7 +26,7 @@
   },
   "scripts": {
     "lint": "jshint {.,lib,commands}/*.js",
-    "test": "node tests",
+    "test": "tap tests/index.js",
     "cover": "istanbul cover --dir artifacts/coverage tests",
     "clean": "git clean -dfx {.,tests}/artifacts",
     "preinstall": "scripts/preinstall.sh"
