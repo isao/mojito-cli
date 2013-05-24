@@ -34,7 +34,7 @@ Quick Start
 1. Start the server.
     
         $ mojito start
-1. In a browser, open the following URL: http://localhost:8666/@hellomojit/index
+1. In a browser, open the following URL: `http://localhost:8666/@hellomojit/index`
  
 Commands
 --------
