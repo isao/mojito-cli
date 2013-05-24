@@ -11,12 +11,12 @@ Install mojito-cli
 ------------------
 
 1. With [npm](http://npmjs.org/), do the following:
-
-    $ npm install --global mojito-cli
+ 
+        $ npm install --global mojito-cli
 
 1. Confirm that `mojito-cli` has been installed.
 
-    $ mojito help
+        $ mojito help
 
 Note that if `mojito` was already installed globally, it will be uninstalled. It is recommended to only 
 install the core `mojito` package as a local dependency in your Mojito application. Users should not 
@@ -27,17 +27,15 @@ Quick Start
 
 1. Create an app (which installs `mojito` locally using npm) and a mojit.
 
-    $ mojito create app myapp
-    $ cd myapp
-    $ mojito create mojito hellomojit
+        $ mojito create app myapp
+        $ cd myapp
+        $ mojito create mojito hellomojit
 
 1. Start the server.
     
-    $ mojito start
-1. In a browser, open the following URL:
-
-    http://localhost:8666/@hellomojit/index
-
+        $ mojito start
+1. In a browser, open the following URL: http://localhost:8666/@hellomojit/index
+ 
 Commands
 --------
 
