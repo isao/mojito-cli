@@ -12,11 +12,11 @@ Install mojito-cli
 
 1. With [npm](http://npmjs.org/), do the following:
 
-    % npm install --global mojito-cli
+    $ npm install --global mojito-cli
 
 1. Confirm that `mojito-cli` has been installed.
 
-    % mojito help
+    $ mojito help
 
 Note that if `mojito` was already installed globally, it will be uninstalled. It is recommended to only 
 install the core `mojito` package as a local dependency in your Mojito application. Users should not 
@@ -27,14 +27,13 @@ Quick Start
 
 1. Create an app (which installs `mojito` locally using npm) and a mojit.
 
-    % mojito create app myapp
-    % cd myapp
-    % mojito create mojito hellomojit
+    $ mojito create app myapp
+    $ cd myapp
+    $ mojito create mojito hellomojit
 
 1. Start the server.
-
-    % mojito start
-
+    
+    $ mojito start
 1. In a browser, open the following URL:
 
     http://localhost:8666/@hellomojit/index
@@ -46,27 +45,27 @@ Commands
 
 To show top-level help for this command-line tool:
 
-    % mojito help
+    $ mojito help
 
 To show help for a specific command:
 
-    % mojito help <command>
+    $ mojito help <command>
 
 ### version
 
 To show the version for `mojito-cli`:
 
-    % mojito version
+    $ mojito version
 
 To show the version of an application, run the following from the application directory:
 
-    % mojito version app
+    $ mojito version app
 
 The version of the mojito runtime installed locally to your app will be displayed as well.
 
 To show the version of a mojit, run the following from the application directory:
 
-    % mojito version mojit <mojit-name>
+    $ mojito version mojit <mojit-name>
 
 ### create
 
@@ -82,7 +81,7 @@ To learn how to do some simple key/value replacement, see
 
 To generate a static snapshot of your Mojito application:
 
-    % mojito build [options] html5app [dest]
+    $ mojito build [options] html5app [dest]
 
 See [mojito-cli-build](http://github.com/yahoo/mojito-cli-build) for more information.
 
@@ -90,7 +89,7 @@ See [mojito-cli-build](http://github.com/yahoo/mojito-cli-build) for more inform
 
 To generate API documentation using [yuidocjs](https://github.com/yui/yuidoc):
 
-    % mojito doc [options] <app|mojit|mojito> [dest]
+    $ mojito doc [options] <app|mojit|mojito> [dest]
 
 See also [mojito-cli-doc](http://github.com/yahoo/mojito-cli-doc).
 
@@ -98,7 +97,7 @@ See also [mojito-cli-doc](http://github.com/yahoo/mojito-cli-doc).
 
 To find common coding pitfalls with static analysis using [jslint](https://github.com/reid/node-jslint):
 
-    % mojito jslint [app|mojit] <path>
+    $ mojito jslint [app|mojit] <path>
 
 <!-- See [mojito-cli-jslint](http://github.com/yahoo/mojito-cli-jslint). -->
 
@@ -106,7 +105,7 @@ To find common coding pitfalls with static analysis using [jslint](https://githu
 
 To start the server and run the application:
 
-    % mojito start [<port>] [--context key1:value1,key2:value2]
+    $ mojito start [<port>] [--context key1:value1,key2:value2]
 
 The port number specified in the command above overrides the port number in the application 
 configuration file, `application.json`. The default port number is 8666. 
@@ -119,15 +118,15 @@ to learn how to use the `--context` option.
 
 To run unit tests for a Mojito application:
 
-    %  mojito test app
+    $  mojito test app
 
 To run unit tests for a specific mojit:
 
-    % mojito test mojit <mojit-name>
+    $ mojito test mojit <mojit-name>
 
 Or:
 
-    % mojito test mojit <mojit-path>
+    $ mojito test mojit <mojit-path>
 
 See [mojito-cli-test](http://github.com/yahoo/mojito-cli-test) for more details.
 
