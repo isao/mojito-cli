@@ -69,8 +69,8 @@ To show the version of a mojit, run the following from the application directory
 
 To generate boilerplate files from the Mojito archetypes or other templates:
 
-    % mojito create [options] <type> [subtype] <name>
-    % mojito create [options] <from> <to>
+    $ mojito create [options] <type> [subtype] <name>
+    $ mojito create [options] <from> <to>
 
 To learn how to do some simple key/value replacement, see 
 [mojito-cli-create](http://github.com/yahoo/mojito-cli-create).
