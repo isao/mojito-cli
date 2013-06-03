@@ -113,6 +113,11 @@ function main(argv, cwd, cb) {
         env.command = 'help';
     }
 
+    // apply command alias, i.e. "docs" -> "doc"
+    if (!(env.command in cli.commands) && (env.command in cli.aliases)) {
+    	env.command = cli.aliases[env.command];
+    }
+
     // collect parsed args and env metadata
     env.cwd = cwd;
     env.cli = cli;
