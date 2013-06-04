@@ -70,15 +70,11 @@ test('version application', function(t) {
         }
     };
 
-    env.mojito = {
-        name: 'mojito',
-        version: '0.0.1',
-        path: '/beep/boop/boppu'
-    };
+    env.mojito = false; // variation for coverage
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'myapp v3.4.5 \nmojito v0.0.1 at /beep/boop/boppu');
+        t.equals(msg, 'myapp v3.4.5 ');
     }
 
     t.plan(2);
