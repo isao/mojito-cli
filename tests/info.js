@@ -19,7 +19,7 @@ test('info exports', function(t) {
 test('info simple', function(t) {
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin');
+        t.ok(~msg.indexOf('mojito-cli v1.2.3'));
         t.end();
     }
 
@@ -37,7 +37,8 @@ test('info app, no deps', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc');
+        t.ok(~msg.indexOf('mojito-cli v1.2.3'));
+        t.ok(msg.indexOf('\nmyapp v3.4.5, lorem ipsum delor etc'));
         t.end();
     }
 
@@ -54,7 +55,8 @@ test('info app, missing description', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, (missing description)');
+        t.ok(~msg.indexOf('mojito-cli v1.2.3'));
+        t.ok(msg.indexOf('\nmyapp v3.4.5, (missing description)'));
         t.end();
     }
 
@@ -75,7 +77,9 @@ test('info app, mojito dep', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc\nmyapp dependencies: mojito');
+        t.ok(~msg.indexOf('mojito-cli v1.2.3'));
+        t.ok(msg.indexOf('\nmyapp v3.4.5, lorem ipsum delor etc'));
+        t.ok(msg.indexOf('\nmyapp dependencies: mojito'));
         t.end();
     }
 
@@ -101,7 +105,10 @@ test('info app, mojito dep, mojito local', function(t) {
 
     function cb(err, msg) {
         t.equals(err, null);
-        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc\nmyapp dependencies: mojito\nmojito v0.0.1 (installed locally).');
+        t.ok(~msg.indexOf('mojito-cli v1.2.3'));
+        t.ok(msg.indexOf('\nmyapp v3.4.5, lorem ipsum delor etc'));
+        t.ok(msg.indexOf('\nmyapp dependencies: mojito'));
+        t.ok(msg.indexOf('\nmojito v0.0.1 (installed locally).'));
         t.end();
     }
 

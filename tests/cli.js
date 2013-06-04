@@ -124,7 +124,7 @@ test('command takes priority over alt cmd flag', function(t) {
 test('mojito (no args)', function(t) {
 
     function cb(err, msg) {
-        t.equals(err, undefined, 'err undefined');
+        t.equals(err, null, 'err should be null');
         t.ok(log.record.length > 3);
     }
 
