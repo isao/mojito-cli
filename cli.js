@@ -11,15 +11,22 @@ var resolve = require('path').resolve,
     getenv = require('./lib/getenv');
 
 
+/**
+ * wrap `require` in a try/catch with some debug logging
+ * @param {string} str require pathname
+ * @return {object|false} module returned by `require`, or false
+ */
 function tryRequire(str) {
     var mod = false;
     try {
         mod = require(str);
         log.debug('required %s', str);
     } catch(err) {
-        if ('MODULE_NOT_FOUND' === err.code) {
-            log.debug('module %s was not found', str);
+        if (('MODULE_NOT_FOUND' === err.code) && ~err.message.indexOf(str)) {
+            // could not find the module using "str"
+            log.debug('module %s not found', str);
         } else {
+            // module was loaded, and threw an exception
             log.debug('module error', err);
         }
     }
@@ -27,7 +34,10 @@ function tryRequire(str) {
 }
 
 /**
- * load a module for use as a subcommand
+ * try to require a module for use as a subcommand by looking in these places:
+ * - require’ing the command-key value from the commands hash in config.json
+ * - require’ing 'mojito-cli-' + cmd
+ * - require’ing the command name from the mojito library path
  * @param {string} sub-command, like 'help', 'create', etc.
  * @param {object} cli, app, and mojito, metadata
  * @return {object|function} module loaded via `require`
@@ -115,7 +125,7 @@ function main(argv, cwd, cb) {
 
     // apply command alias, i.e. "docs" -> "doc"
     if (!(env.command in cli.commands) && (env.command in cli.aliases)) {
-    	env.command = cli.aliases[env.command];
+        env.command = cli.aliases[env.command];
     }
 
     // collect parsed args and env metadata
