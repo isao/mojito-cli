@@ -10,11 +10,6 @@ function getMeta() {
     return {cli: {name: 'mojito-cli', version: '1.2.3'}};
 }
 
-function reset() {
-    log.record = [];
-    log._buffer = [];
-}
-
 test('info exports', function(t) {
     t.equal('function', typeof info);
     t.equal('string', typeof info.usage);
@@ -23,14 +18,11 @@ test('info exports', function(t) {
 
 test('info simple', function(t) {
     function cb(err, msg) {
-        t.equals(err, undefined);
-        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
-        t.equals(log.record.shift().message.trim().substring(0, 4), 'node');
-        t.equals(log.record.length, 0);
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin');
         t.end();
     }
 
-    reset();
     info(getMeta(), cb);
 });
 
@@ -44,21 +36,11 @@ test('info app, no deps', function(t) {
     };
 
     function cb(err, msg) {
-        var m;
-
-        t.equals(err, undefined);
-        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
-        t.ok(log.record.shift());
-        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
-
-        m = log.record.shift();
-        t.equals(m.level, 'warn');
-        t.equals(m.message.trim(), 'Mojito is not listed as a dependency in your package.json. Fix with:');
-        t.equals(log.record.length, 2);
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc');
         t.end();
     }
 
-    reset();
     info(meta, cb);
 });
 
@@ -71,21 +53,11 @@ test('info app, missing description', function(t) {
     };
 
     function cb(err, msg) {
-        var m;
-
-        t.equals(err, undefined);
-        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
-        t.ok(log.record.shift());
-        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, (missing description)');
-
-        m = log.record.shift();
-        t.equals(m.level, 'warn');
-        t.equals(m.message.trim(), 'Mojito is not listed as a dependency in your package.json. Fix with:');
-        t.equals(log.record.length, 2);
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, (missing description)');
         t.end();
     }
 
-    reset();
     info(meta, cb);
 });
 
@@ -102,24 +74,11 @@ test('info app, mojito dep', function(t) {
     };
 
     function cb(err, msg) {
-        var m;
-
-        t.equals(err, undefined);
-        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
-        t.ok(log.record.shift());
-        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
-        t.equals(log.record.shift().message.trim(), 'myapp dependencies: mojito');
-
-        m = log.record.shift();
-        t.equals(m.level, 'warn');
-        t.equals(m.message.trim(), 'Mojito is not installed locally. Install with:');
-        t.equals(log.record.shift().message.trim(), 'npm install mojito');
-        t.ok(log.record.shift());
-        t.equals(log.record.length, 0);
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc\nmyapp dependencies: mojito');
         t.end();
     }
 
-    reset();
     info(meta, cb);
 });
 
@@ -141,20 +100,10 @@ test('info app, mojito dep, mojito local', function(t) {
     };
 
     function cb(err, msg) {
-        var m;
-        t.equals(err, undefined);
-        t.equals(log.record.shift().message.trim(), 'mojito-cli v1.2.3');
-        t.ok(log.record.shift());
-        t.equals(log.record.shift().message.trim(), 'myapp v3.4.5, lorem ipsum delor etc');
-
-        m = log.record.shift();
-        t.equals(m.level, 'info');
-        t.equals(m.message.trim(), 'myapp dependencies: mojito');
-        t.equals(log.record.shift().message.trim(), 'mojito v0.0.1 (installed locally).');
-        t.equals(log.record.length, 0);
+        t.equals(err, null);
+        t.equals(msg, 'mojito-cli v1.2.3\nnode v0.10.9/darwin\nmyapp v3.4.5, lorem ipsum delor etc\nmyapp dependencies: mojito\nmojito v0.0.1 (installed locally).');
         t.end();
     }
 
-    reset();
     info(meta, cb);
 });

@@ -114,10 +114,10 @@ test('help create', function(t) {
 
 test('help mock jslint', function(t) {
     var env = {
-            args: ['jslint'],
+            args: ['gv'],
             cli: {commands:{}},
             mojito: {
-                commands: ['jslint', 'beep', 'boop'],
+                commands: ['gv', 'beep', 'boop'],
                 commandsPath: resolve(__dirname, 'fixtures/someapp/node_modules/mojito/lib/app/commands')
             }
         };
@@ -126,7 +126,7 @@ test('help mock jslint', function(t) {
 
     function cb(err, msg) {
         t.equal(err, null);
-        t.ok(msg.match(/^mock usage for mojito\/lib\/app\/commands\/jslint/));
+        t.ok(msg.match(/^mock usage for mojito\/lib\/app\/commands\/gv/));
     }
 
     reset();
