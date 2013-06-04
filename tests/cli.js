@@ -78,20 +78,21 @@ test('mojito (mock) gv --lib ...', function(t) {
     }
 
     t.plan(3);
-    fn(['gv', 'arg1', '--debug', '--libmojito', lib], '', cb);
+    fn(['gv', 'arg1', '--debug', '--lib', lib], '', cb);
 });
 
-// test('mojito gv --libmojito ..,', function(t) {
-//     var lib = resolve(__dirname, 'fixtures/someapp/node_modules/mojito');
-//
-//     function cb(err, args, opts) {
-//         t.equals(err, null);
-//         t.same(args, []);
-//     }
-//
-//     t.plan(2);
-//     fn(['gv', '--libmojito', lib], '', cb);
-// });
+test('mojito (mock) gv --libmojito ...', function(t) {
+    var lib = resolve(__dirname, 'fixtures/someapp/node_modules/mojito');
+
+    function cb(err, args, opts) {
+        t.equals(err, null);
+        t.same(args, ['arg1']);
+        t.same(opts, {loglevel: 'debug', libmojito: lib});
+    }
+
+    t.plan(3);
+    fn(['gv', 'arg1', '--debug', '--libmojito', lib], __dirname, cb);
+});
 
 test('mojito --version', function(t) {
     t.plan(3);
@@ -114,50 +115,6 @@ test('mojito version', function(t) {
 
     t.equals(fn(['version'], '', cb), 'version');
 });
-
-// test('mojito version app', function(t) {
-//     t.plan(3);
-//
-//     function cb(err, msg) {
-//         t.equals(err, null);
-//         t.equals(msg, 'mojito-cli v0.0.3 ');
-//     }
-//
-//     t.equals(fn(['version', 'app'], '', cb), 'version');
-// });
-//
-// test('mojito version application', function(t) {
-//     t.plan(3);
-//
-//     function cb(err, msg) {
-//         t.equals(err, null);
-//         t.equals(msg, 'mojito-cli v0.0.3 ');
-//     }
-//
-//     t.equals(fn(['version', 'application'], '', cb), 'version');
-// });
-//
-// test('mojito version mojit', function(t) {
-//     t.plan(3);
-//
-//     function cb(err, msg) {
-//         t.equals(err, null);
-//         t.equals(msg, undefined);
-//     }
-//
-//     t.equals(fn(['version', 'mojit'], '', cb), 'version');
-// });
-//
-// test('mojito info', function(t) {
-//     t.plan(3);
-//
-//     function cb(err, msg) {
-//         t.equals(err, null);
-//         t.equals(msg, undefined);
-//     }
-//
-//     t.equals(fn(['info'], '', cb), 'info');
-// });
 
 test('command takes priority over alt cmd flag', function(t) {
     t.equals(fn(['--version', 'help'], '', noop), 'help');
