@@ -40,7 +40,7 @@ test('mojito docs // alias for `doc`', function(t) {
     }
 
     t.plan(2);
-    fn(['docs'], cwd, cb);
+    fn(['docs', 'app', 'alias-test'], cwd, cb);
 });
 
 test('mojito help docs // alias for `doc`', function(t) {
