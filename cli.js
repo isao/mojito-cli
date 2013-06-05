@@ -123,7 +123,7 @@ function main(argv, cwd, cb) {
     }
 
     // apply command alias, i.e. "docs" -> "doc"
-    if (!(env.command in cli.commands) && (env.command in cli.aliases)) {
+    if (!cli.commands[env.command] && cli.aliases[env.command]) {
         env.command = cli.aliases[env.command];
     }
 
