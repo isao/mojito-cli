@@ -42,7 +42,7 @@ function appinfo(env) {
 function main(env, cb) {
     out = [];
     out.push(fmt('%s v%s', env.cli.name, env.cli.version));
-    out.push(fmt('node %s/%s', process.version, process.platform));;
+    out.push(fmt('node %s/%s', process.version, process.platform));
     appinfo(env);
     cb(null, out.join(EOL));
 }

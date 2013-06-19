@@ -6,7 +6,6 @@
 'use strict';
 
 var load = require('../').load,
-    log = require('../lib/log'),
     EOL = require('os').EOL;
 
 
@@ -30,8 +29,7 @@ function help(env) {
 
 function main(env, cb) {
     var cmd = env.args.shift() || '',
-        mod,
-        out = [];
+        mod;
 
     if (!cmd) {
         cb(null, help(env));

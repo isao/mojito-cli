@@ -20,11 +20,11 @@ function tryRequire(str) {
     var mod = false;
     try {
         mod = require(str);
-        log.debug('required %s', str);
+        log.debug('required', str);
     } catch(err) {
         if (('MODULE_NOT_FOUND' === err.code) && ~err.message.indexOf(str)) {
             // could not find the module using "str"
-            log.debug('module %s not found', str);
+            log.debug('module not found:', str);
         } else {
             // module was loaded, and threw an exception
             log.debug('module error', err);
@@ -88,11 +88,11 @@ function exec(env, cb) {
     log.silly('env:', env);
 
     if (mod && mod.hasOwnProperty('run')) {
-        log.debug('invoking legacy command %s', env.command);
+        log.debug('invoking legacy command', env.command);
         mod.run(env.args, env.opts, cb);
 
     } else if ('function' === typeof mod) {
-        log.debug('invoking command %s', env.command);
+        log.debug('invoking command', env.command);
         mod(env, cb);
 
     } else {
