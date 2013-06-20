@@ -1,3 +1,4 @@
-/artifacts
 /node_modules
-/results.tap
+artifacts/
+results.tap
+npm-debug.log
