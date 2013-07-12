@@ -9,15 +9,13 @@ var cli = require('../cli'),
 
 
 function done(err, msg) {
-    var code;
     if(err) {
-        code = err.errno || 1;
         log.error(err instanceof Error ? err.message : err);
+        process.exit(err.errno || 1);
+        //todo put stack trace, orig error string in log file?
     } else if(msg) {
-        code = 0;
         console.log(msg);
     }
-    process.exit(code);
 }
 
 cli(process.argv.slice(2), process.cwd(), done);
