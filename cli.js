@@ -20,14 +20,14 @@ function tryRequire(str) {
     var mod = false;
     try {
         mod = require(str);
-        log.debug('required', str);
+        log.debug('required', require.resolve(str));
     } catch(err) {
         if (('MODULE_NOT_FOUND' === err.code) && ~err.message.indexOf(str)) {
             // could not find the module using "str"
             log.debug('module not found:', str);
         } else {
             // module was loaded, and threw an exception
-            log.debug('module error', err);
+            log.debug('module error:', err);
         }
     }
     return mod;

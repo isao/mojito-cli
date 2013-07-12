@@ -10,7 +10,7 @@
         "version": "./commands/version"
     },
     "aliases": {
-    	"docs": "doc"
+        "docs": "doc"
     },
     "options": [
         {"shortName": "d", "hasValue": true,  "longName": "directory"},
