@@ -10,9 +10,14 @@ var cli = require('../cli'),
 
 function done(err, msg) {
     if(err) {
-        log.error(err instanceof Error ? err.message : err);
-        process.exit(err.errno || 1);
-        //todo put stack trace, orig error string in log file?
+        if (err instanceof Error) {
+            log.debug(err);
+            log.error(err.message);
+            process.exit(err.errno || 11);
+        } else {
+            log.error(err);
+            process.exit(1);
+        }
     } else if(msg) {
         console.log(msg);
     }
