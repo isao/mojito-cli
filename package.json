@@ -12,7 +12,7 @@
     "mojito-cli-create": "~0.0.4",
     "mojito-cli-doc": "~0.0.1",
     "mojito-cli-jslint": "~0.0.1",
-    "mojito-cli-start": "~0.0.1",
+    "mojito-cli-start": "git://github.com/imalberto/mojito-cli.git#next",
     "mojito-cli-test": "~0.0.2",
     "nopt": "~2.1.1",
     "npmlog": "0.0.2"
