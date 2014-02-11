@@ -8,11 +8,10 @@
   "main": "cli.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-cli-build": "~0.0.1",
-    "mojito-cli-create": "~0.0.4",
+    "mojito-cli-create": "git://github.com/imalberto/mojito-cli-create.git#fix-archetypes",
     "mojito-cli-doc": "~0.0.1",
     "mojito-cli-jslint": "~0.0.1",
-    "mojito-cli-start": "git://github.com/imalberto/mojito-cli.git#next",
+    "mojito-cli-start": "git://github.com/imalberto/mojito-cli-start.git#fix-app.js",
     "mojito-cli-test": "~0.0.2",
     "nopt": "~2.1.1",
     "npmlog": "0.0.2"
