@@ -8,7 +8,7 @@
   "main": "cli.js",
   "preferGlobal": true,
   "dependencies": {
-    "mojito-cli-create": "git://github.com/imalberto/mojito-cli-create.git#fix-archetypes",
+    "mojito-cli-create": "~0.1",
     "mojito-cli-doc": "~0.0.1",
     "mojito-cli-jslint": "~0.0.1",
     "mojito-cli-test": "~0.0.2",
